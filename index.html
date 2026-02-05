@@ -1032,26 +1032,77 @@
                 }
             }, [familyCode, deviceRegistered]);
 
-            // ✅ NUOVA FUNZIONE: Carica stato notifiche dal database
+            // ✅ NUOVA FUNZIONE: Carica stato notifiche dal database E INIZIALIZZA MESSAGING
             const loadNotificationState = async (code, deviceId) => {
                 try {
                     const memberRef = database.ref(`families/${code}/members/${deviceId}`);
                     const snapshot = await memberRef.once('value');
                     const memberData = snapshot.val();
                     
-                    if (memberData && memberData.notificationsEnabled) {
-                        console.log('📱 Notifiche già abilitate per questo dispositivo');
-                        setNotificationsEnabled(true);
+                    if (memberData && memberData.notificationsEnabled && Notification.permission === 'granted') {
+                        console.log('📱 Notifiche già abilitate per questo dispositivo - inizializzazione messaging...');
                         
-                        // Verifica che il service worker sia ancora registrato
-                        if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.getRegistration('/MealPlanner/')
-                                .then(registration => {
-                                    if (!registration) {
-                                        console.log('⚠️ Service worker non trovato, re-inizializzazione necessaria');
-                                        setNotificationsEnabled(false);
-                                    }
+                        try {
+                            // 1. Verifica/Registra service worker
+                            let swRegistration = await navigator.serviceWorker.getRegistration('/MealPlanner/');
+                            
+                            if (!swRegistration) {
+                                console.log('🔄 Service worker non trovato, registrazione...');
+                                swRegistration = await navigator.serviceWorker.register(
+                                    '/MealPlanner/firebase-messaging-sw.js',
+                                    { scope: '/MealPlanner/' }
+                                );
+                                await navigator.serviceWorker.ready;
+                            }
+                            
+                            console.log('✅ Service worker OK:', swRegistration);
+                            
+                            // 2. Inizializza messaging se non già fatto
+                            if (!messaging) {
+                                messaging = getMessaging(app);
+                                console.log('✅ Messaging inizializzato');
+                                
+                                // Gestisci messaggi in foreground
+                                onMessage(messaging, (payload) => {
+                                    console.log('📨 Messaggio ricevuto in foreground:', payload);
+                                    const notificationTitle = payload.notification?.title || 'Menu Famiglia';
+                                    const notificationOptions = {
+                                        body: payload.notification?.body || 'Nuovo aggiornamento',
+                                        icon: '/MealPlanner/icon-192.png',
+                                        badge: '/MealPlanner/icon-192.png'
+                                    };
+                                    new Notification(notificationTitle, notificationOptions);
                                 });
+                            }
+                            
+                            // 3. Verifica che abbiamo ancora un token valido
+                            const currentToken = await getToken(messaging, {
+                                vapidKey: VAPID_KEY,
+                                serviceWorkerRegistration: swRegistration
+                            });
+                            
+                            console.log('✅ Token FCM ripristinato:', currentToken.substring(0, 50) + '...');
+                            
+                            // 4. Aggiorna il token nel database se è cambiato
+                            if (currentToken !== memberData.fcmToken) {
+                                console.log('🔄 Token FCM aggiornato nel database');
+                                await database.ref(`families/${code}/members/${deviceId}`).update({
+                                    fcmToken: currentToken,
+                                    lastNotificationUpdate: Date.now()
+                                });
+                            }
+                            
+                            setNotificationsEnabled(true);
+                            console.log('✅ Notifiche completamente ripristinate!');
+                            
+                        } catch (error) {
+                            console.error('❌ Errore ripristino notifiche:', error);
+                            // Se fallisce il ripristino, disabilita le notifiche
+                            await database.ref(`families/${code}/members/${deviceId}`).update({
+                                notificationsEnabled: false,
+                                fcmToken: null
+                            });
+                            setNotificationsEnabled(false);
                         }
                     } else {
                         console.log('🔕 Notifiche disabilitate per questo dispositivo');
