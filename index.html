@@ -175,26 +175,21 @@
             z-index: 1;
         }
 
+        .nav-tab:hover {
+            color: var(--text);
+        }
+
+        .nav-tab.active {
+            color: var(--text);
+        }
+
         .nav-tab.active::before {
             opacity: 1;
         }
 
-        .nav-tab.active {
-            color: white;
-        }
-
-        .nav-tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .nav-tab:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
         .tab-content {
             display: none;
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.5s ease-in;
         }
 
         .tab-content.active {
@@ -206,8 +201,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .menu-grid {
+        .week-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -216,8 +212,8 @@
             background: var(--card-bg);
             border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
             position: relative;
             overflow: hidden;
         }
@@ -227,57 +223,49 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .day-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
         }
 
-        .day-title {
+        .day-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .day-name {
             font-family: 'Righteous', cursive;
             font-size: 1.5rem;
             margin-bottom: 15px;
-            padding-left: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent);
         }
 
         .meal-section {
             margin-bottom: 15px;
         }
 
-        .meal-section:last-child {
-            margin-bottom: 0;
-        }
-
         .meal-label {
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .meal-input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .meal-input {
-            flex: 1;
+            width: 100%;
+            padding: 12px 15px;
             background: var(--dark-alt);
             border: 2px solid transparent;
             border-radius: 12px;
-            padding: 12px 15px;
             color: var(--text);
             font-family: 'Karla', sans-serif;
             font-size: 1rem;
@@ -288,52 +276,127 @@
             outline: none;
             border-color: var(--secondary);
             background: var(--dark);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
         }
 
-        .icon-btn {
-            background: transparent;
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 10px;
+        .meal-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .shopping-list {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-item-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: var(--dark-alt);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+        }
+
+        .add-item-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .shopping-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--dark-alt);
+            border-radius: 12px;
             transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .shopping-item:hover {
+            background: var(--dark);
+            transform: translateX(5px);
+        }
+
+        .shopping-item.checked {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 40px;
-        }
-
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
-        }
-
-        .add-meal-btn {
-            background: transparent;
-            border: 2px dashed var(--text-muted);
-            color: var(--text-muted);
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
+            flex-shrink: 0;
             transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 8px;
         }
 
-        .add-meal-btn:hover {
-            border-color: var(--secondary);
-            color: var(--secondary);
-            background: rgba(78, 205, 196, 0.1);
+        .shopping-item.checked .checkbox {
+            background: var(--secondary);
+        }
+
+        .checkbox::after {
+            content: '✓';
+            color: var(--dark);
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .shopping-item.checked .checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 1.05rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.3rem;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.2);
         }
 
         .btn {
             padding: 12px 25px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             font-family: 'Karla', sans-serif;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -347,254 +410,61 @@
         .btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
-            transition: left 0.3s ease;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
         .btn:hover::before {
-            left: 100%;
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #ff8e8e);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), #ff5252);
+            color: var(--text);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary), #6ee7e0);
-            color: white;
+            background: linear-gradient(135deg, var(--secondary), #3bb8af);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
         }
 
         .btn-accent {
-            background: linear-gradient(135deg, var(--accent), #fff89e);
+            background: linear-gradient(135deg, var(--accent), #ffd93d);
             color: var(--dark);
         }
 
-        .btn:hover {
+        .btn-accent:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 230, 109, 0.4);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .shopping-list {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .shopping-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--dark-alt);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .shopping-item:hover {
-            background: var(--dark);
-            transform: translateX(5px);
-        }
-
-        .shopping-item.checked {
-            opacity: 0.5;
-        }
-
-        .shopping-item.checked .item-name {
-            text-decoration: line-through;
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            accent-color: var(--success);
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-name {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text);
-        }
-
-        .item-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .category-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--dark);
-            color: var(--secondary);
-        }
-
-        .add-item-form {
-            display: grid;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .select {
-            background: var(--dark-alt);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 12px 15px;
-            color: var(--text);
-            font-family: 'Karla', sans-serif;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .select:focus {
-            outline: none;
-            border-color: var(--secondary);
-            background: var(--dark);
-        }
-
-        .action-bar {
+        .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .action-bar .btn {
-            flex: 1;
-            min-width: 150px;
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) {
-            .action-bar .btn {
-                min-width: 100%;
-            }
-        }
-
-        .info-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .info-card h3 {
-            font-family: 'Righteous', cursive;
-            font-size: 2rem;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .info-card p {
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .code-display {
-            display: inline-block;
-            font-family: 'Courier New', monospace;
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 3px;
-            padding: 10px 20px;
-            border: 3px solid var(--dark-alt);
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .family-info {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-        }
-
-        .member-list {
-            display: grid;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .member-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background: var(--dark-alt);
-            border-radius: 12px;
-        }
-
-        .member-name {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .member-status {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .success-message {
-            background: rgba(6, 255, 165, 0.1);
-            border: 2px solid var(--success);
-            border-radius: 15px;
-            padding: 15px;
-            color: var(--success);
-            text-align: center;
-            font-weight: 600;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .modal {
@@ -608,24 +478,25 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            animation: fadeIn 0.3s ease-out;
             padding: 20px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background: var(--card-bg);
             border-radius: 20px;
             padding: 30px;
-            max-width: 600px;
+            max-width: 500px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: slideUp 0.3s ease-out;
+            animation: slideUp 0.3s ease;
+            border: 2px solid var(--dark-alt);
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -639,79 +510,90 @@
         .modal-header h3 {
             font-family: 'Righteous', cursive;
             font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent);
         }
 
         .close-btn {
-            background: transparent;
+            background: none;
             border: none;
+            color: var(--text);
             font-size: 2rem;
-            color: var(--text-muted);
             cursor: pointer;
+            opacity: 0.6;
             transition: all 0.3s ease;
-            padding: 0;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
+            border-radius: 50%;
         }
 
         .close-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--primary);
+            opacity: 1;
+            background: var(--dark);
             transform: rotate(90deg);
         }
 
-        .template-grid {
-            display: grid;
-            gap: 15px;
+        .family-setup {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .template-card {
+        .family-option {
             background: var(--dark-alt);
+            padding: 25px;
             border-radius: 15px;
-            padding: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: center;
         }
 
-        .template-card:hover {
-            background: var(--dark);
-            transform: translateX(5px);
+        .family-option:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
         }
 
-        .template-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .template-name {
-            font-weight: 700;
-            font-size: 1.1rem;
+        .family-option h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
             color: var(--text);
         }
 
-        .template-date {
-            font-size: 0.85rem;
+        .family-option p {
             color: var(--text-muted);
-            margin-top: 5px;
+            font-size: 0.95rem;
         }
 
-        .template-actions {
-            display: flex;
-            gap: 5px;
+        .input-group {
+            margin-top: 20px;
         }
 
-        .save-template-box {
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
             background: var(--dark-alt);
-            border-radius: 15px;
-            padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
         }
 
         .qr-container {
@@ -721,6 +603,7 @@
 
         .qr-container img {
             max-width: 100%;
+            height: auto;
             border-radius: 15px;
             margin-bottom: 15px;
         }
@@ -732,128 +615,273 @@
 
         .share-options {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 10px;
             margin-top: 20px;
         }
 
         .share-btn {
-            width: 100%;
+            white-space: nowrap;
+        }
+
+        .family-info {
+            background: var(--dark-alt);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .family-code {
+            font-family: 'Righteous', cursive;
+            font-size: 2rem;
+            color: var(--accent);
+            text-align: center;
+            margin: 10px 0;
+            letter-spacing: 3px;
+        }
+
+        .members-list {
+            margin-top: 15px;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .member-role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            background: var(--dark);
+            border-radius: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-family: 'Righteous', cursive;
+            color: var(--text);
+            margin-bottom: 10px;
         }
 
         .settings-section {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .settings-section h3 {
             font-family: 'Righteous', cursive;
             font-size: 1.5rem;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent);
+            margin-bottom: 20px;
         }
 
-        .toggle-switch {
+        .setting-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px;
-            background: var(--dark-alt);
-            border-radius: 12px;
-            margin-bottom: 10px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--dark-alt);
         }
 
-        .toggle-label {
-            font-weight: 600;
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info h4 {
             color: var(--text);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
         }
 
-        .switch {
+        .setting-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
             position: relative;
             width: 60px;
-            height: 30px;
-            background: #444;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background 0.3s;
+            height: 32px;
         }
 
-        .switch.active {
-            background: var(--success);
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
-        .switch-handle {
+        .toggle-slider {
             position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-
-        .switch.active .switch-handle {
-            transform: translateX(30px);
-        }
-
-        .debug-info {
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: var(--dark-alt);
+            border-radius: 34px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(28px);
+            background: white;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .template-card {
+            background: var(--dark-alt);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .template-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .template-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--dark);
+            transform: scale(1.1);
+        }
+
+        .save-template-box {
+            background: var(--dark-alt);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .notification-status {
             padding: 15px;
             border-radius: 12px;
-            margin-top: 15px;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 300px;
-            overflow-y: auto;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-status.success {
+            background: rgba(6, 255, 165, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .notification-status.error {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .notification-status.info {
+            background: rgba(78, 205, 196, 0.1);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                justify-content: center;
             }
 
-            .header h1 {
-                font-size: 2rem;
+            .share-options {
+                grid-template-columns: 1fr;
             }
 
-            .day-card {
-                padding: 15px;
+            .add-item-form {
+                flex-direction: column;
             }
-
-            .day-title {
-                font-size: 1.3rem;
-            }
-
-            .btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Scrollbar personalizzata */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--dark-alt);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary);
         }
     </style>
 </head>
@@ -861,33 +889,20 @@
     <div class="bg-pattern"></div>
     <div id="root"></div>
 
-    <!-- Firebase SDK - VERSIONE MODERNA (non compat) -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, get, update, onValue, off } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-        import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js';
-        
-        // Rendi disponibili globalmente per React
-        window.firebaseModules = {
-            initializeApp,
-            getDatabase, ref, set, get, update, onValue, off,
-            getMessaging, getToken, onMessage
-        };
-    </script>
-
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+    
     <!-- React & Babel -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- QRCode.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
-        const { initializeApp, getDatabase, ref, set, get, update, onValue, off, getMessaging, getToken, onMessage } = window.firebaseModules;
 
-        // Firebase Configuration
+        // Configurazione Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAp_2VabxjEQek4Oo8118wSOsisoytyJ_I",
             authDomain: "menu-settimanale-2913d.firebaseapp.com",
@@ -898,1160 +913,864 @@
             appId: "1:974523761082:web:4f4ad5c5d2b978e9f55d83"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        // Inizializza Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
         
-        // Wrapper per mantenere la sintassi compatibile
-        const database = {
-            ref: (path) => ({
-                set: (value) => set(ref(db, path), value),
-                update: (value) => update(ref(db, path), value),
-                remove: () => set(ref(db, path), null),
-                once: async (eventType) => {
-                    const snapshot = await get(ref(db, path));
-                    return snapshot;
-                },
-                on: (eventType, callback) => {
-                    const dbRef = ref(db, path);
-                    return onValue(dbRef, callback);
-                },
-                off: () => {
-                    const dbRef = ref(db, path);
-                    off(dbRef);
-                }
-            })
-        };
-        
-        // NON inizializziamo messaging subito - lo faremo quando l'utente abilita le notifiche
+        // Inizializza Firebase Messaging
         let messaging = null;
-        const VAPID_KEY = 'BGT7zunf0sbrqsSakzFudcTU5zE-W_m-IJWjAauTYtiycMvlVW0cfCqhahNF5Pn-2a7De0YroLhMMu_TQdE6xIQ';
+        if (firebase.messaging.isSupported()) {
+            try {
+                messaging = firebase.messaging();
+                console.log('Firebase Messaging inizializzato con successo');
+            } catch (error) {
+                console.warn('Errore inizializzazione Firebase Messaging:', error);
+            }
+        } else {
+            console.warn('Firebase Messaging non supportato su questo browser');
+        }
 
         function App() {
-            const [activeTab, setActiveTab] = useState('settings');
-            const [menu, setMenu] = useState({
-                Lunedì: { lunch: [''], dinner: [''] },
-                Martedì: { lunch: [''], dinner: [''] },
-                Mercoledì: { lunch: [''], dinner: [''] },
-                Giovedì: { lunch: [''], dinner: [''] },
-                Venerdì: { lunch: [''], dinner: [''] },
-                Sabato: { lunch: [''], dinner: [''] },
-                Domenica: { lunch: [''], dinner: [''] }
+            const [activeTab, setActiveTab] = useState('menu');
+            const [familyCode, setFamilyCode] = useState(localStorage.getItem('familyCode') || '');
+            const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
+            const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
+            const [showFamilySetup, setShowFamilySetup] = useState(false);
+            const [setupMode, setSetupMode] = useState('');
+            const [inputCode, setInputCode] = useState('');
+            const [inputName, setInputName] = useState('');
+            const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+            const [notificationStatus, setNotificationStatus] = useState('');
+            const [fcmToken, setFcmToken] = useState('');
+
+            // Stati per menu e shopping list
+            const [weekMenu, setWeekMenu] = useState({
+                Lunedì: { lunch: '', dinner: '' },
+                Martedì: { lunch: '', dinner: '' },
+                Mercoledì: { lunch: '', dinner: '' },
+                Giovedì: { lunch: '', dinner: '' },
+                Venerdì: { lunch: '', dinner: '' },
+                Sabato: { lunch: '', dinner: '' },
+                Domenica: { lunch: '', dinner: '' }
             });
+
             const [shoppingList, setShoppingList] = useState([]);
-            const [newItem, setNewItem] = useState({ name: '', quantity: '', category: 'Altro' });
-            const [savedMenus, setSavedMenus] = useState([]);
-            const [savedShoppingLists, setSavedShoppingLists] = useState([]);
+            const [newItem, setNewItem] = useState('');
+            const [members, setMembers] = useState({});
+            const [showQRModal, setShowQRModal] = useState(false);
+            const [qrCodeUrl, setQrCodeUrl] = useState('');
+
+            // Stati per template
             const [showSaveMenuModal, setShowSaveMenuModal] = useState(false);
             const [showLoadMenuModal, setShowLoadMenuModal] = useState(false);
             const [showSaveListModal, setShowSaveListModal] = useState(false);
             const [showLoadListModal, setShowLoadListModal] = useState(false);
-            const [showQRModal, setShowQRModal] = useState(false);
             const [templateName, setTemplateName] = useState('');
-            const [qrCodeUrl, setQrCodeUrl] = useState('');
-            const [familyCode, setFamilyCode] = useState('');
-            const [userName, setUserName] = useState('');
-            const [deviceRegistered, setDeviceRegistered] = useState(false);
-            const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-            const [familyMembers, setFamilyMembers] = useState([]);
-            const [registrationStep, setRegistrationStep] = useState('initial'); // initial, join, create
-            const [joinCode, setJoinCode] = useState('');
+            const [savedMenus, setSavedMenus] = useState([]);
+            const [savedShoppingLists, setSavedShoppingLists] = useState([]);
 
             const daysOfWeek = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
-            const categories = ['Frutta e Verdura', 'Carne e Pesce', 'Latticini', 'Pane e Cereali', 'Bevande', 'Altro'];
 
+            // Controlla setup famiglia all'avvio
             useEffect(() => {
-                const storedFamilyCode = localStorage.getItem('familyCode');
-                const storedUserName = localStorage.getItem('userName');
-                const storedDeviceId = localStorage.getItem('deviceId');
-
-                if (storedFamilyCode && storedUserName && storedDeviceId) {
-                    setFamilyCode(storedFamilyCode);
-                    setUserName(storedUserName);
-                    setDeviceRegistered(true);
-                    setActiveTab('menu');
-                    loadFamilyData(storedFamilyCode);
-                    
-                    // ✅ CARICA LO STATO DELLE NOTIFICHE DAL DATABASE
-                    loadNotificationState(storedFamilyCode, storedDeviceId);
-                }
-
-                loadSavedMenus();
-                loadSavedShoppingLists();
-
-                // Controlla se c'è un codice join nell'URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const joinParam = urlParams.get('join');
-                if (joinParam && !storedFamilyCode) {
-                    setJoinCode(joinParam);
-                    setRegistrationStep('join');
+                const storedCode = localStorage.getItem('familyCode');
+                const storedName = localStorage.getItem('userName');
+                const storedUserId = localStorage.getItem('userId');
+                
+                if (!storedCode || !storedName || !storedUserId) {
+                    setShowFamilySetup(true);
+                } else {
+                    setFamilyCode(storedCode);
+                    setUserName(storedName);
+                    setUserId(storedUserId);
+                    // Carica lo stato delle notifiche da Firebase
+                    loadNotificationState(storedCode, storedUserId);
                 }
             }, []);
 
-            useEffect(() => {
-                if (familyCode && deviceRegistered) {
-                    const menuRef = database.ref(`families/${familyCode}/menu`);
-                    const shoppingRef = database.ref(`families/${familyCode}/shoppingList`);
-                    const membersRef = database.ref(`families/${familyCode}/members`);
+            // Carica stato notifiche da Firebase
+            const loadNotificationState = async (code, uid) => {
+                try {
+                    const memberRef = database.ref(`/families/${code}/members/${uid}`);
+                    const snapshot = await memberRef.once('value');
+                    const memberData = snapshot.val();
+                    
+                    if (memberData && memberData.notificationsEnabled) {
+                        setNotificationsEnabled(true);
+                        if (memberData.fcmToken) {
+                            setFcmToken(memberData.fcmToken);
+                            console.log('Notifiche già attive con token esistente');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Errore caricamento stato notifiche:', error);
+                }
+            };
 
+            // Sincronizza dati con Firebase
+            useEffect(() => {
+                if (familyCode && userId) {
+                    // Listener per menu
+                    const menuRef = database.ref(`/families/${familyCode}/menu`);
                     menuRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
-                            const formattedMenu = {};
-                            daysOfWeek.forEach(day => {
-                                formattedMenu[day] = {
-                                    lunch: Array.isArray(data[day]?.lunch) ? data[day].lunch : (data[day]?.lunch ? [data[day].lunch] : ['']),
-                                    dinner: Array.isArray(data[day]?.dinner) ? data[day].dinner : (data[day]?.dinner ? [data[day].dinner] : [''])
-                                };
-                            });
-                            setMenu(formattedMenu);
+                            setWeekMenu(data);
                         }
                     });
 
+                    // Listener per shopping list
+                    const shoppingRef = database.ref(`/families/${familyCode}/shoppingList`);
                     shoppingRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
-                            setShoppingList(Array.isArray(data) ? data : Object.values(data));
+                            setShoppingList(data);
                         }
                     });
 
+                    // Listener per membri
+                    const membersRef = database.ref(`/families/${familyCode}/members`);
                     membersRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
-                            setFamilyMembers(Object.entries(data).map(([id, member]) => ({
-                                id,
-                                ...member
-                            })));
+                            setMembers(data);
                         }
                     });
+
+                    // Listener per template menu
+                    const menusRef = database.ref(`/families/${familyCode}/savedMenus`);
+                    menusRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setSavedMenus(Object.entries(data).map(([id, menu]) => ({ id, ...menu })));
+                        }
+                    });
+
+                    // Listener per template liste
+                    const listsRef = database.ref(`/families/${familyCode}/savedLists`);
+                    listsRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setSavedShoppingLists(Object.entries(data).map(([id, list]) => ({ id, ...list })));
+                        }
+                    });
+
+                    // Aggiorna lastActive ogni 5 minuti
+                    const updateActivity = () => {
+                        database.ref(`/families/${familyCode}/members/${userId}/lastActive`).set(Date.now());
+                    };
+                    updateActivity();
+                    const activityInterval = setInterval(updateActivity, 5 * 60 * 1000);
 
                     return () => {
                         menuRef.off();
                         shoppingRef.off();
                         membersRef.off();
+                        menusRef.off();
+                        listsRef.off();
+                        clearInterval(activityInterval);
                     };
                 }
-            }, [familyCode, deviceRegistered]);
+            }, [familyCode, userId]);
 
-            // ✅ NUOVA FUNZIONE: Carica stato notifiche dal database E INIZIALIZZA MESSAGING
-            const loadNotificationState = async (code, deviceId) => {
+            // Gestione notifiche push
+            const requestNotificationPermission = async () => {
+                if (!messaging) {
+                    setNotificationStatus('Le notifiche push non sono supportate su questo browser');
+                    return;
+                }
+
                 try {
-                    const memberRef = database.ref(`families/${code}/members/${deviceId}`);
-                    const snapshot = await memberRef.once('value');
-                    const memberData = snapshot.val();
+                    // Richiedi permesso notifiche
+                    const permission = await Notification.requestPermission();
                     
-                    if (memberData && memberData.notificationsEnabled && Notification.permission === 'granted') {
-                        console.log('📱 Notifiche già abilitate per questo dispositivo - inizializzazione messaging...');
+                    if (permission === 'granted') {
+                        console.log('Permesso notifiche concesso');
                         
-                        try {
-                            // 1. Verifica/Registra service worker
-                            let swRegistration = await navigator.serviceWorker.getRegistration('/MealPlanner/');
+                        // Registra service worker per Firebase Messaging
+                        const registration = await navigator.serviceWorker.register('/MealPlanner/firebase-messaging-sw.js', {
+                            scope: '/MealPlanner/'
+                        });
+                        
+                        console.log('Service Worker registrato:', registration);
+                        
+                        // Ottieni token FCM
+                        const token = await messaging.getToken({
+                            vapidKey: 'BK8VxPZ-vT9gH3Y4YqF0sXJzM2wKcN5RtLbQdPmWfA1GhC6IuEjS7', // Dovrai generare questa chiave nella console Firebase
+                            serviceWorkerRegistration: registration
+                        });
+                        
+                        console.log('Token FCM ottenuto:', token);
+                        setFcmToken(token);
+                        
+                        // Salva token e stato in Firebase
+                        await database.ref(`/families/${familyCode}/members/${userId}`).update({
+                            fcmToken: token,
+                            notificationsEnabled: true,
+                            lastTokenUpdate: Date.now()
+                        });
+                        
+                        setNotificationsEnabled(true);
+                        setNotificationStatus('✅ Notifiche attivate con successo!');
+                        
+                        // Gestisci messaggi in foreground
+                        messaging.onMessage((payload) => {
+                            console.log('Messaggio ricevuto in foreground:', payload);
                             
-                            if (!swRegistration) {
-                                console.log('🔄 Service worker non trovato, registrazione...');
-                                swRegistration = await navigator.serviceWorker.register(
-                                    '/MealPlanner/firebase-messaging-sw.js',
-                                    { scope: '/MealPlanner/' }
-                                );
-                                await navigator.serviceWorker.ready;
-                            }
-                            
-                            console.log('✅ Service worker OK:', swRegistration);
-                            
-                            // 2. Inizializza messaging se non già fatto
-                            if (!messaging) {
-                                messaging = getMessaging(app);
-                                console.log('✅ Messaging inizializzato');
-                                
-                                // Gestisci messaggi in foreground
-                                onMessage(messaging, (payload) => {
-                                    console.log('📨 Messaggio ricevuto in foreground:', payload);
-                                    const notificationTitle = payload.notification?.title || 'Menu Famiglia';
-                                    const notificationOptions = {
-                                        body: payload.notification?.body || 'Nuovo aggiornamento',
-                                        icon: '/MealPlanner/icon-192.png',
-                                        badge: '/MealPlanner/icon-192.png'
-                                    };
-                                    new Notification(notificationTitle, notificationOptions);
+                            // Mostra notifica anche in foreground
+                            if (Notification.permission === 'granted') {
+                                new Notification(payload.notification.title, {
+                                    body: payload.notification.body,
+                                    icon: '/MealPlanner/icon-192.png',
+                                    badge: '/MealPlanner/icon-192.png',
+                                    tag: 'menu-famiglia'
                                 });
                             }
-                            
-                            // 3. Verifica che abbiamo ancora un token valido
-                            const currentToken = await getToken(messaging, {
-                                vapidKey: VAPID_KEY,
-                                serviceWorkerRegistration: swRegistration
+                        });
+                        
+                        // Test notifica
+                        setTimeout(() => {
+                            new Notification('Menu Famiglia', {
+                                body: '🎉 Notifiche configurate! Riceverai aggiornamenti del menu e della spesa.',
+                                icon: '/MealPlanner/icon-192.png',
+                                tag: 'welcome'
                             });
-                            
-                            console.log('✅ Token FCM ripristinato:', currentToken.substring(0, 50) + '...');
-                            
-                            // 4. Aggiorna il token nel database se è cambiato
-                            if (currentToken !== memberData.fcmToken) {
-                                console.log('🔄 Token FCM aggiornato nel database');
-                                await database.ref(`families/${code}/members/${deviceId}`).update({
-                                    fcmToken: currentToken,
-                                    lastNotificationUpdate: Date.now()
-                                });
-                            }
-                            
-                            setNotificationsEnabled(true);
-                            console.log('✅ Notifiche completamente ripristinate!');
-                            
-                        } catch (error) {
-                            console.error('❌ Errore ripristino notifiche:', error);
-                            // Se fallisce il ripristino, disabilita le notifiche
-                            await database.ref(`families/${code}/members/${deviceId}`).update({
-                                notificationsEnabled: false,
-                                fcmToken: null
-                            });
-                            setNotificationsEnabled(false);
-                        }
+                        }, 1000);
+                        
+                    } else if (permission === 'denied') {
+                        setNotificationStatus('❌ Permesso negato. Abilitalo nelle impostazioni del browser.');
+                        setNotificationsEnabled(false);
                     } else {
-                        console.log('🔕 Notifiche disabilitate per questo dispositivo');
+                        setNotificationStatus('⚠️ Permesso non concesso');
                         setNotificationsEnabled(false);
                     }
                 } catch (error) {
-                    console.error('Errore caricamento stato notifiche:', error);
+                    console.error('Errore richiesta notifiche:', error);
+                    setNotificationStatus(`❌ Errore: ${error.message}`);
                     setNotificationsEnabled(false);
                 }
             };
 
-            const loadFamilyData = (code) => {
-                const menuRef = database.ref(`families/${code}/menu`);
-                const shoppingRef = database.ref(`families/${code}/shoppingList`);
-
-                menuRef.once('value').then((snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        const formattedMenu = {};
-                        daysOfWeek.forEach(day => {
-                            formattedMenu[day] = {
-                                lunch: Array.isArray(data[day]?.lunch) ? data[day].lunch : (data[day]?.lunch ? [data[day].lunch] : ['']),
-                                dinner: Array.isArray(data[day]?.dinner) ? data[day].dinner : (data[day]?.dinner ? [data[day].dinner] : [''])
-                            };
-                        });
-                        setMenu(formattedMenu);
-                    }
-                });
-
-                shoppingRef.once('value').then((snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        setShoppingList(Array.isArray(data) ? data : Object.values(data));
-                    }
-                });
-            };
-
-            const generateFamilyCode = () => {
-                return Math.random().toString(36).substring(2, 8).toUpperCase();
-            };
-
-            const createFamily = async () => {
-                if (!userName.trim()) {
-                    alert('Inserisci il tuo nome');
-                    return;
-                }
-
-                const newFamilyCode = generateFamilyCode();
-                const deviceId = 'device_' + Date.now();
-                
+            const disableNotifications = async () => {
                 try {
-                    const memberData = {
-                        name: userName,
-                        deviceId: deviceId,
-                        joinedAt: Date.now(),
-                        lastActive: Date.now(),
-                        notificationsEnabled: false
-                    };
-
-                    await database.ref(`families/${newFamilyCode}/members/${deviceId}`).set(memberData);
-
-                    const emptyMenu = {};
-                    daysOfWeek.forEach(day => {
-                        emptyMenu[day] = { lunch: [''], dinner: [''] };
+                    // Aggiorna stato in Firebase
+                    await database.ref(`/families/${familyCode}/members/${userId}`).update({
+                        notificationsEnabled: false,
+                        fcmToken: null
                     });
-                    await database.ref(`families/${newFamilyCode}/menu`).set(emptyMenu);
-                    await database.ref(`families/${newFamilyCode}/shoppingList`).set([]);
-
-                    localStorage.setItem('familyCode', newFamilyCode);
-                    localStorage.setItem('userName', userName);
-                    localStorage.setItem('deviceId', deviceId);
-
-                    setFamilyCode(newFamilyCode);
-                    setDeviceRegistered(true);
-                    setActiveTab('menu');
+                    
+                    setNotificationsEnabled(false);
+                    setFcmToken('');
+                    setNotificationStatus('🔕 Notifiche disattivate');
+                    
+                    console.log('Notifiche disattivate');
                 } catch (error) {
-                    console.error('Error creating family:', error);
-                    alert('Errore nella creazione della famiglia: ' + error.message);
-                }
-            };
-
-            const joinFamily = async () => {
-                if (!userName.trim()) {
-                    alert('Inserisci il tuo nome');
-                    return;
-                }
-                if (!joinCode.trim()) {
-                    alert('Inserisci il codice famiglia');
-                    return;
-                }
-
-                const code = joinCode.toUpperCase().trim();
-                const deviceId = 'device_' + Date.now();
-
-                try {
-                    const familyRef = database.ref(`families/${code}`);
-                    const snapshot = await familyRef.once('value');
-
-                    if (!snapshot.exists()) {
-                        alert('Codice famiglia non valido');
-                        return;
-                    }
-
-                    const memberData = {
-                        name: userName,
-                        deviceId: deviceId,
-                        joinedAt: Date.now(),
-                        lastActive: Date.now(),
-                        notificationsEnabled: false
-                    };
-
-                    await database.ref(`families/${code}/members/${deviceId}`).set(memberData);
-
-                    localStorage.setItem('familyCode', code);
-                    localStorage.setItem('userName', userName);
-                    localStorage.setItem('deviceId', deviceId);
-
-                    setFamilyCode(code);
-                    setDeviceRegistered(true);
-                    setActiveTab('menu');
-                    loadFamilyData(code);
-                } catch (error) {
-                    console.error('Error joining family:', error);
-                    alert('Errore nell\'unirsi alla famiglia: ' + error.message);
+                    console.error('Errore disattivazione notifiche:', error);
+                    setNotificationStatus(`❌ Errore: ${error.message}`);
                 }
             };
 
             const toggleNotifications = async () => {
-                try {
-                    const deviceId = localStorage.getItem('deviceId');
-                    const newState = !notificationsEnabled;
-
-                    if (newState) {
-                        // ✅ ABILITA NOTIFICHE
-                        const permission = await Notification.requestPermission();
-                        if (permission === 'granted') {
-                            try {
-                                // 1. Registra il service worker
-                                console.log('📝 Registrazione service worker...');
-                                const swRegistration = await navigator.serviceWorker.register(
-                                    '/MealPlanner/firebase-messaging-sw.js',
-                                    { scope: '/MealPlanner/' }
-                                );
-                                
-                                console.log('✅ Service worker registrato:', swRegistration);
-                                
-                                // 2. Aspetta che sia attivo
-                                await navigator.serviceWorker.ready;
-                                console.log('✅ Service worker pronto');
-                                
-                                // 3. Inizializza messaging
-                                if (!messaging) {
-                                    messaging = getMessaging(app);
-                                    console.log('✅ Messaging inizializzato');
-                                    
-                                    // Gestisci messaggi in foreground
-                                    onMessage(messaging, (payload) => {
-                                        console.log('📨 Messaggio ricevuto in foreground:', payload);
-                                        const notificationTitle = payload.notification?.title || 'Menu Famiglia';
-                                        const notificationOptions = {
-                                            body: payload.notification?.body || 'Nuovo aggiornamento',
-                                            icon: '/MealPlanner/icon-192.png',
-                                            badge: '/MealPlanner/icon-192.png'
-                                        };
-                                        new Notification(notificationTitle, notificationOptions);
-                                    });
-                                }
-                                
-                                // 4. Ottieni il token FCM
-                                console.log('🔑 Richiesta token FCM...');
-                                const token = await getToken(messaging, {
-                                    vapidKey: VAPID_KEY,
-                                    serviceWorkerRegistration: swRegistration
-                                });
-                                
-                                console.log('✅ Token FCM ottenuto:', token.substring(0, 50) + '...');
-                                
-                                // 5. Salva nel database
-                                await database.ref(`families/${familyCode}/members/${deviceId}`).update({
-                                    fcmToken: token,
-                                    notificationsEnabled: true,
-                                    lastNotificationUpdate: Date.now()
-                                });
-                                
-                                setNotificationsEnabled(true);
-                                alert('✅ Notifiche push abilitate con successo!\n\nRiceverai notifiche per:\n📝 Modifiche al menu\n🛒 Aggiornamenti lista spesa\n⏰ Promemoria pasti');
-                            } catch (error) {
-                                console.error('❌ Errore abilitazione notifiche:', error);
-                                alert('⚠️ Errore nell\'abilitazione delle notifiche push.\n\nDettagli: ' + error.message + '\n\nVerifica la console (F12) per maggiori informazioni');
-                            }
-                        } else {
-                            alert('❌ Permesso notifiche negato dal browser.\n\nPer abilitare le notifiche, vai nelle impostazioni del browser.');
-                        }
-                    } else {
-                        // ✅ DISABILITA NOTIFICHE
-                        await database.ref(`families/${familyCode}/members/${deviceId}`).update({
-                            notificationsEnabled: false,
-                            fcmToken: null,
-                            lastNotificationUpdate: Date.now()
-                        });
-                        setNotificationsEnabled(false);
-                        alert('🔕 Notifiche disabilitate');
-                    }
-                } catch (error) {
-                    console.error('Error toggling notifications:', error);
-                    alert('Errore nella gestione delle notifiche: ' + error.message);
-                }
-            };
-
-            const sendManualNotification = async () => {
-                if (!familyCode || !deviceRegistered) {
-                    alert('⚠️ Devi prima unirti o creare una famiglia!');
-                    return;
-                }
-
-                const message = prompt('📢 Inserisci il messaggio da inviare a tutti i membri della famiglia:', 'Ciao! 👋');
-                
-                if (!message || message.trim() === '') {
-                    return;
-                }
-
-                try {
-                    const notificationData = {
-                        title: '📢 Messaggio da ' + userName,
-                        body: message.trim(),
-                        timestamp: Date.now(),
-                        sender: userName,
-                        type: 'manual'
-                    };
-
-                    await database.ref(`families/${familyCode}/notifications`).push(notificationData);
-                    
-                    alert('✅ Notifica inviata con successo!\n\nTutti i membri della famiglia riceveranno il messaggio.');
-                } catch (error) {
-                    console.error('Errore invio notifica manuale:', error);
-                    alert('❌ Errore nell\'invio della notifica: ' + error.message);
-                }
-            };
-
-            const checkNotificationStatus = async () => {
-                let status = '🔔 STATUS NOTIFICHE\n\n';
-                
-                // 1. Supporto browser
-                status += '1️⃣ Supporto Browser:\n';
-                status += `   - Service Worker: ${('serviceWorker' in navigator) ? '✅' : '❌'}\n`;
-                status += `   - Notifications: ${('Notification' in window) ? '✅' : '❌'}\n`;
-                status += `   - Firebase Messaging: ${messaging ? '✅' : '❌ (Non inizializzato)'}\n\n`;
-                
-                // 2. Permessi
-                status += '2️⃣ Permessi:\n';
-                if ('Notification' in window) {
-                    status += `   - Stato: ${Notification.permission}\n`;
-                    status += `   - ${Notification.permission === 'granted' ? '✅ Concessi' : Notification.permission === 'denied' ? '❌ Negati' : '⚠️ Non richiesti'}\n\n`;
-                }
-                
-                // 3. Firebase
-                status += '3️⃣ Firebase:\n';
-                status += `   - Famiglia: ${familyCode || 'Nessuna'}\n`;
-                status += `   - Device ID: ${localStorage.getItem('deviceId') || 'Nessuno'}\n`;
-                status += `   - Notifiche DB: ${notificationsEnabled ? '✅ Abilitate' : '❌ Disabilitate'}\n\n`;
-                
-                // 4. Token FCM
-                status += '4️⃣ Token FCM:\n';
-                if (messaging && Notification.permission === 'granted' && notificationsEnabled) {
-                    try {
-                        const swRegistration = await navigator.serviceWorker.getRegistration('/MealPlanner/');
-                        if (swRegistration) {
-                            const token = await getToken(messaging, {
-                                vapidKey: VAPID_KEY,
-                                serviceWorkerRegistration: swRegistration
-                            });
-                            status += `   ✅ Token ottenuto\n`;
-                            status += `   ${token.substring(0, 50)}...\n\n`;
-                        } else {
-                            status += `   ❌ Service Worker non registrato\n\n`;
-                        }
-                    } catch (error) {
-                        status += `   ❌ Errore: ${error.message}\n\n`;
-                    }
+                if (notificationsEnabled) {
+                    await disableNotifications();
                 } else {
-                    status += `   ⚠️ Non disponibile\n`;
-                    if (!notificationsEnabled) status += `   (Notifiche disabilitate)\n`;
-                    if (Notification.permission !== 'granted') status += `   (Permessi non concessi)\n`;
-                    status += '\n';
+                    await requestNotificationPermission();
+                }
+            };
+
+            // Funzioni famiglia
+            const createFamily = () => {
+                if (!inputName.trim()) {
+                    alert('Inserisci il tuo nome!');
+                    return;
                 }
                 
-                // 5. Cloud Functions
-                status += '5️⃣ Cloud Functions:\n';
-                try {
-                    const deviceId = localStorage.getItem('deviceId');
-                    if (deviceId && familyCode) {
-                        const memberRef = database.ref(`families/${familyCode}/members/${deviceId}`);
-                        const snapshot = await memberRef.once('value');
-                        const memberData = snapshot.val();
-                        
-                        if (memberData && memberData.fcmToken) {
-                            status += '   ✅ Token salvato nel database\n';
-                            status += `   Token: ${memberData.fcmToken.substring(0, 30)}...\n`;
-                        } else {
-                            status += '   ❌ Token non trovato nel database\n';
+                const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+                const uid = `user_${Date.now()}`;
+                
+                database.ref(`/families/${code}`).set({
+                    createdAt: Date.now(),
+                    createdBy: inputName,
+                    menu: weekMenu,
+                    shoppingList: [],
+                    members: {
+                        [uid]: {
+                            name: inputName,
+                            role: 'creator',
+                            joinedAt: Date.now(),
+                            lastActive: Date.now(),
+                            notificationsEnabled: false
                         }
                     }
-                } catch (error) {
-                    status += `   ❌ Errore verifica database: ${error.message}\n`;
-                }
+                });
                 
-                status += '\n📝 IMPORTANTE:\n';
-                status += 'Le Cloud Functions devono essere deployate\n';
-                status += 'su Firebase per inviare notifiche!\n\n';
-                status += 'Verifica in Firebase Console:\n';
-                status += '- Functions > Logs\n';
-                status += '- Cerca errori di deployment\n';
+                localStorage.setItem('familyCode', code);
+                localStorage.setItem('userName', inputName);
+                localStorage.setItem('userId', uid);
                 
-                alert(status);
-                console.log(status);
+                setFamilyCode(code);
+                setUserName(inputName);
+                setUserId(uid);
+                setShowFamilySetup(false);
             };
 
-            const updateMenu = (day, mealType, index, value) => {
-                const newMenu = { ...menu };
-                newMenu[day][mealType][index] = value;
-                setMenu(newMenu);
-
-                if (deviceRegistered && familyCode) {
-                    console.log('🔔 Aggiornamento menu:', { day, mealType, value, familyCode });
-                    database.ref(`families/${familyCode}/menu/${day}/${mealType}`).set(newMenu[day][mealType])
-                        .then(() => {
-                            console.log('✅ Menu aggiornato con successo su Firebase');
-                        })
-                        .catch((error) => {
-                            console.error('❌ Errore aggiornamento menu:', error);
+            const joinFamily = () => {
+                if (!inputCode.trim() || !inputName.trim()) {
+                    alert('Inserisci il codice famiglia e il tuo nome!');
+                    return;
+                }
+                
+                const code = inputCode.toUpperCase();
+                const uid = `user_${Date.now()}`;
+                
+                database.ref(`/families/${code}`).once('value', (snapshot) => {
+                    if (snapshot.exists()) {
+                        database.ref(`/families/${code}/members/${uid}`).set({
+                            name: inputName,
+                            role: 'member',
+                            joinedAt: Date.now(),
+                            lastActive: Date.now(),
+                            notificationsEnabled: false
                         });
+                        
+                        localStorage.setItem('familyCode', code);
+                        localStorage.setItem('userName', inputName);
+                        localStorage.setItem('userId', uid);
+                        
+                        setFamilyCode(code);
+                        setUserName(inputName);
+                        setUserId(uid);
+                        setShowFamilySetup(false);
+                    } else {
+                        alert('Codice famiglia non valido!');
+                    }
+                });
+            };
+
+            const leaveFamily = () => {
+                if (confirm('Sei sicuro di voler uscire dalla famiglia?')) {
+                    database.ref(`/families/${familyCode}/members/${userId}`).remove();
+                    localStorage.removeItem('familyCode');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userId');
+                    setFamilyCode('');
+                    setUserName('');
+                    setUserId('');
+                    setShowFamilySetup(true);
                 }
             };
 
-            const addMealField = (day, mealType) => {
-                const newMenu = { ...menu };
-                newMenu[day][mealType].push('');
-                setMenu(newMenu);
+            // Funzioni menu
+            const updateMeal = (day, mealType, value) => {
+                const updatedMenu = { ...weekMenu };
+                updatedMenu[day][mealType] = value;
+                setWeekMenu(updatedMenu);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/menu/${day}/${mealType}`).set(value);
+                }
             };
 
-            const removeMealField = (day, mealType, index) => {
-                const newMenu = { ...menu };
-                if (newMenu[day][mealType].length > 1) {
-                    newMenu[day][mealType].splice(index, 1);
-                    setMenu(newMenu);
-
-                    if (deviceRegistered && familyCode) {
-                        database.ref(`families/${familyCode}/menu/${day}/${mealType}`).set(newMenu[day][mealType]);
+            const clearMenu = () => {
+                if (confirm('Vuoi cancellare tutto il menu?')) {
+                    const emptyMenu = {};
+                    daysOfWeek.forEach(day => {
+                        emptyMenu[day] = { lunch: '', dinner: '' };
+                    });
+                    setWeekMenu(emptyMenu);
+                    
+                    if (familyCode) {
+                        database.ref(`/families/${familyCode}/menu`).set(emptyMenu);
                     }
                 }
             };
 
             const generateShoppingList = () => {
                 const items = [];
-                Object.values(menu).forEach(day => {
-                    [...day.lunch, ...day.dinner].forEach(meal => {
-                        if (meal.trim()) {
-                            items.push({
-                                id: Date.now() + Math.random(),
-                                name: meal,
-                                checked: false,
-                                category: 'Altro'
-                            });
-                        }
-                    });
+                Object.values(weekMenu).forEach(day => {
+                    if (day.lunch) items.push({ id: Date.now() + Math.random(), name: `Ingredienti per: ${day.lunch}`, checked: false });
+                    if (day.dinner) items.push({ id: Date.now() + Math.random(), name: `Ingredienti per: ${day.dinner}`, checked: false });
                 });
-
-                if (items.length === 0) {
-                    alert('⚠️ Il menu è vuoto! Aggiungi prima dei piatti al menu settimanale.');
-                    return;
+                
+                setShoppingList(items);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/shoppingList`).set(items);
                 }
-
-                const newList = [...shoppingList, ...items];
-                setShoppingList(newList);
-
-                if (deviceRegistered && familyCode) {
-                    database.ref(`families/${familyCode}/shoppingList`).set(newList);
-                }
-
-                alert(`✅ Lista della spesa generata!\n\n${items.length} prodotti aggiunti dalla settimana`);
+                
                 setActiveTab('shopping');
             };
 
-            const addShoppingItem = () => {
-                if (newItem.name.trim()) {
+            // Funzioni shopping list
+            const addItem = () => {
+                if (newItem.trim()) {
                     const item = {
                         id: Date.now(),
-                        name: newItem.name,
-                        quantity: newItem.quantity,
-                        category: newItem.category,
+                        name: newItem,
                         checked: false
                     };
-
-                    const newList = [...shoppingList, item];
-                    setShoppingList(newList);
-                    setNewItem({ name: '', quantity: '', category: 'Altro' });
-
-                    if (deviceRegistered && familyCode) {
-                        database.ref(`families/${familyCode}/shoppingList`).set(newList);
+                    const updatedList = [...shoppingList, item];
+                    setShoppingList(updatedList);
+                    setNewItem('');
+                    
+                    if (familyCode) {
+                        database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
                     }
                 }
             };
 
-            const toggleShoppingItem = (id) => {
-                const newList = shoppingList.map(item =>
+            const toggleItem = (id) => {
+                const updatedList = shoppingList.map(item =>
                     item.id === id ? { ...item, checked: !item.checked } : item
                 );
-                setShoppingList(newList);
-
-                if (deviceRegistered && familyCode) {
-                    database.ref(`families/${familyCode}/shoppingList`).set(newList);
+                setShoppingList(updatedList);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
                 }
             };
 
-            const deleteShoppingItem = (id) => {
-                const newList = shoppingList.filter(item => item.id !== id);
-                setShoppingList(newList);
-
-                if (deviceRegistered && familyCode) {
-                    database.ref(`families/${familyCode}/shoppingList`).set(newList);
-                }
-            };
-
-            const clearMenu = () => {
-                if (confirm('Sei sicuro di voler cancellare tutto il menu?')) {
-                    const emptyMenu = {};
-                    daysOfWeek.forEach(day => {
-                        emptyMenu[day] = { lunch: [''], dinner: [''] };
-                    });
-                    setMenu(emptyMenu);
-
-                    if (deviceRegistered && familyCode) {
-                        database.ref(`families/${familyCode}/menu`).set(emptyMenu);
-                    }
+            const deleteItem = (id) => {
+                const updatedList = shoppingList.filter(item => item.id !== id);
+                setShoppingList(updatedList);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
                 }
             };
 
             const clearShoppingList = () => {
-                if (confirm('Sei sicuro di voler cancellare tutta la lista?')) {
+                if (confirm('Vuoi cancellare tutta la lista della spesa?')) {
                     setShoppingList([]);
-
-                    if (deviceRegistered && familyCode) {
-                        database.ref(`families/${familyCode}/shoppingList`).set([]);
+                    
+                    if (familyCode) {
+                        database.ref(`/families/${familyCode}/shoppingList`).set([]);
                     }
                 }
             };
 
+            // Funzioni template
             const saveMenu = () => {
-                if (templateName.trim()) {
-                    const newTemplate = {
-                        id: Date.now(),
-                        name: templateName,
-                        menu: menu,
-                        createdAt: Date.now()
-                    };
-
-                    const updated = [...savedMenus, newTemplate];
-                    setSavedMenus(updated);
-                    localStorage.setItem('savedMenus', JSON.stringify(updated));
-
-                    setTemplateName('');
-                    setShowSaveMenuModal(false);
+                if (!templateName.trim()) {
+                    alert('Inserisci un nome per il menu!');
+                    return;
                 }
+                
+                const menuId = `menu_${Date.now()}`;
+                const menuData = {
+                    name: templateName,
+                    menu: weekMenu,
+                    createdAt: Date.now(),
+                    createdBy: userName
+                };
+                
+                database.ref(`/families/${familyCode}/savedMenus/${menuId}`).set(menuData);
+                setShowSaveMenuModal(false);
+                setTemplateName('');
+                alert('Menu salvato!');
             };
 
-            const loadMenu = (id) => {
-                const template = savedMenus.find(m => m.id === id);
-                if (template) {
-                    setMenu(template.menu);
+            const loadMenu = (menuId) => {
+                const menu = savedMenus.find(m => m.id === menuId);
+                if (menu) {
+                    setWeekMenu(menu.menu);
+                    database.ref(`/families/${familyCode}/menu`).set(menu.menu);
                     setShowLoadMenuModal(false);
-
-                    if (deviceRegistered && familyCode) {
-                        database.ref(`families/${familyCode}/menu`).set(template.menu);
-                    }
                 }
             };
 
-            const deleteMenu = (id) => {
-                if (confirm('Sei sicuro di voler eliminare questo menu?')) {
-                    const updated = savedMenus.filter(m => m.id !== id);
-                    setSavedMenus(updated);
-                    localStorage.setItem('savedMenus', JSON.stringify(updated));
+            const deleteMenu = (menuId) => {
+                if (confirm('Vuoi eliminare questo menu salvato?')) {
+                    database.ref(`/families/${familyCode}/savedMenus/${menuId}`).remove();
                 }
             };
 
             const saveShoppingList = () => {
-                if (templateName.trim()) {
-                    const newTemplate = {
-                        id: Date.now(),
-                        name: templateName,
-                        list: shoppingList,
-                        createdAt: Date.now()
-                    };
-
-                    const updated = [...savedShoppingLists, newTemplate];
-                    setSavedShoppingLists(updated);
-                    localStorage.setItem('savedShoppingLists', JSON.stringify(updated));
-
-                    setTemplateName('');
-                    setShowSaveListModal(false);
+                if (!templateName.trim()) {
+                    alert('Inserisci un nome per la lista!');
+                    return;
                 }
+                
+                const listId = `list_${Date.now()}`;
+                const listData = {
+                    name: templateName,
+                    list: shoppingList,
+                    createdAt: Date.now(),
+                    createdBy: userName
+                };
+                
+                database.ref(`/families/${familyCode}/savedLists/${listId}`).set(listData);
+                setShowSaveListModal(false);
+                setTemplateName('');
+                alert('Lista salvata!');
             };
 
-            const loadShoppingList = (id) => {
-                const template = savedShoppingLists.find(l => l.id === id);
-                if (template) {
-                    setShoppingList(template.list);
+            const loadShoppingList = (listId) => {
+                const list = savedShoppingLists.find(l => l.id === listId);
+                if (list) {
+                    setShoppingList(list.list);
+                    database.ref(`/families/${familyCode}/shoppingList`).set(list.list);
                     setShowLoadListModal(false);
-
-                    if (deviceRegistered && familyCode) {
-                        database.ref(`families/${familyCode}/shoppingList`).set(template.list);
-                    }
                 }
             };
 
-            const deleteShoppingList = (id) => {
-                if (confirm('Sei sicuro di voler eliminare questa lista?')) {
-                    const updated = savedShoppingLists.filter(l => l.id !== id);
-                    setSavedShoppingLists(updated);
-                    localStorage.setItem('savedShoppingLists', JSON.stringify(updated));
+            const deleteShoppingList = (listId) => {
+                if (confirm('Vuoi eliminare questa lista salvata?')) {
+                    database.ref(`/families/${familyCode}/savedLists/${listId}`).remove();
                 }
             };
 
-            const loadSavedMenus = () => {
-                const saved = localStorage.getItem('savedMenus');
-                if (saved) {
-                    setSavedMenus(JSON.parse(saved));
-                }
+            // Funzioni condivisione
+            const showQRCode = () => {
+                const url = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${window.location.origin}/MealPlanner/index.html?code=${familyCode}`;
+                setQrCodeUrl(url);
+                setShowQRModal(true);
             };
 
-            const loadSavedShoppingLists = () => {
-                const saved = localStorage.getItem('savedShoppingLists');
-                if (saved) {
-                    setSavedShoppingLists(JSON.parse(saved));
-                }
-            };
-
-            const generateQRCode = () => {
-                const url = `${window.location.origin}${window.location.pathname}?join=${familyCode}`;
-                const qr = document.createElement('div');
-                new QRCode(qr, {
-                    text: url,
-                    width: 256,
-                    height: 256
-                });
-
-                setTimeout(() => {
-                    const img = qr.querySelector('img');
-                    if (img) {
-                        setQrCodeUrl(img.src);
-                        setShowQRModal(true);
-                    }
-                }, 100);
-            };
-
-            const shareQRCode = async (method) => {
-                const url = `${window.location.origin}${window.location.pathname}?join=${familyCode}`;
-                const text = `Unisciti alla mia famiglia su Menu Famiglia! Codice: ${familyCode}`;
-
-                if (method === 'whatsapp') {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
-                } else if (method === 'copy') {
-                    try {
-                        await navigator.clipboard.writeText(url);
+            const shareQRCode = (method) => {
+                const shareUrl = `${window.location.origin}/MealPlanner/index.html?code=${familyCode}`;
+                const shareText = `Unisciti alla nostra famiglia su Menu Famiglia! Codice: ${familyCode}`;
+                
+                switch(method) {
+                    case 'whatsapp':
+                        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + '\n' + shareUrl)}`, '_blank');
+                        break;
+                    case 'copy':
+                        navigator.clipboard.writeText(shareUrl);
                         alert('Link copiato negli appunti!');
-                    } catch (error) {
-                        alert('Errore nel copiare il link');
-                    }
-                } else if (method === 'download') {
-                    const link = document.createElement('a');
-                    link.download = `qr-code-famiglia-${familyCode}.png`;
-                    link.href = qrCodeUrl;
-                    link.click();
+                        break;
+                    case 'download':
+                        const link = document.createElement('a');
+                        link.href = qrCodeUrl;
+                        link.download = `QR-Code-Famiglia-${familyCode}.png`;
+                        link.click();
+                        break;
                 }
             };
 
-            const leaveFamily = () => {
-                if (confirm('Sei sicuro di voler uscire dalla famiglia? Tutti i tuoi dati locali verranno cancellati.')) {
-                    const deviceId = localStorage.getItem('deviceId');
-                    if (deviceId && familyCode) {
-                        database.ref(`families/${familyCode}/members/${deviceId}`).remove();
-                    }
-
-                    localStorage.removeItem('familyCode');
-                    localStorage.removeItem('userName');
-                    localStorage.removeItem('deviceId');
-
-                    setFamilyCode('');
-                    setUserName('');
-                    setDeviceRegistered(false);
-                    setNotificationsEnabled(false);
-                    setActiveTab('settings');
-                    setRegistrationStep('initial');
+            // Gestione query params per auto-join
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const codeParam = urlParams.get('code');
+                
+                if (codeParam && !familyCode) {
+                    setInputCode(codeParam);
+                    setSetupMode('join');
+                    setShowFamilySetup(true);
                 }
-            };
+            }, []);
+
+            if (showFamilySetup) {
+                return (
+                    <div className="container">
+                        <div className="header">
+                            <h1>🍽️ Menu Famiglia</h1>
+                            <p>Organizza il menu settimanale con la tua famiglia</p>
+                        </div>
+
+                        <div className="modal" style={{ position: 'fixed' }}>
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h3>👨‍👩‍👧‍👦 Benvenuto!</h3>
+                                </div>
+
+                                {!setupMode ? (
+                                    <div className="family-setup">
+                                        <div className="family-option" onClick={() => setSetupMode('create')}>
+                                            <h4>✨ Crea nuova famiglia</h4>
+                                            <p>Inizia un nuovo menu condiviso</p>
+                                        </div>
+                                        <div className="family-option" onClick={() => setSetupMode('join')}>
+                                            <h4>🤝 Unisciti a famiglia</h4>
+                                            <p>Entra in una famiglia esistente</p>
+                                        </div>
+                                    </div>
+                                ) : setupMode === 'create' ? (
+                                    <div>
+                                        <div className="input-group">
+                                            <label>Il tuo nome</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Es: Mario"
+                                                value={inputName}
+                                                onChange={(e) => setInputName(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && createFamily()}
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                            <button className="btn btn-secondary" onClick={() => setSetupMode('')}>
+                                                ← Indietro
+                                            </button>
+                                            <button className="btn btn-primary" style={{ flex: 1 }} onClick={createFamily}>
+                                                Crea Famiglia
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div className="input-group">
+                                            <label>Codice famiglia</label>
+                                            <input
+                                                type="text"
+                                                placeholder="ES: ABC123"
+                                                value={inputCode}
+                                                onChange={(e) => setInputCode(e.target.value.toUpperCase())}
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Il tuo nome</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Es: Mario"
+                                                value={inputName}
+                                                onChange={(e) => setInputName(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && joinFamily()}
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                            <button className="btn btn-secondary" onClick={() => setSetupMode('')}>
+                                                ← Indietro
+                                            </button>
+                                            <button className="btn btn-primary" style={{ flex: 1 }} onClick={joinFamily}>
+                                                Unisciti
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
 
             return (
                 <div className="container">
                     <div className="header">
                         <h1>🍽️ Menu Famiglia</h1>
-                        <p>Organizza il menu settimanale della tua famiglia</p>
+                        <p>Ciao {userName}! Benvenuto nella famiglia <strong>{familyCode}</strong></p>
                         <div className="powered-by">
-                            Powered by <a href="https://firebase.google.com" target="_blank" rel="noopener noreferrer">Firebase</a>
+                            Powered by <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Claude AI</a>
                         </div>
                     </div>
 
                     <div className="nav-tabs">
                         <button
-                            className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('settings')}
-                        >
-                            <span>⚙️ Impostazioni</span>
-                        </button>
-                        <button
                             className={`nav-tab ${activeTab === 'menu' ? 'active' : ''}`}
                             onClick={() => setActiveTab('menu')}
-                            disabled={!deviceRegistered}
                         >
                             <span>📅 Menu</span>
                         </button>
                         <button
                             className={`nav-tab ${activeTab === 'shopping' ? 'active' : ''}`}
                             onClick={() => setActiveTab('shopping')}
-                            disabled={!deviceRegistered}
                         >
                             <span>🛒 Spesa</span>
                         </button>
+                        <button
+                            className={`nav-tab ${activeTab === 'family' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('family')}
+                        >
+                            <span>👨‍👩‍👧‍👦 Famiglia</span>
+                        </button>
+                        <button
+                            className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('settings')}
+                        >
+                            <span>⚙️ Impostazioni</span>
+                        </button>
                     </div>
 
-                    {/* Settings Tab */}
-                    <div className={`tab-content ${activeTab === 'settings' ? 'active' : ''}`}>
-                        {!deviceRegistered ? (
-                            <div className="info-card">
-                                <h3>👋 Benvenuto!</h3>
-                                <p>Per iniziare, crea una nuova famiglia o unisciti a una esistente.</p>
-
-                                {registrationStep === 'initial' && (
-                                    <>
-                                        <div className="form-group" style={{ marginTop: '20px' }}>
-                                            <label>Il tuo nome</label>
-                                            <input
-                                                type="text"
-                                                value={userName}
-                                                onChange={(e) => setUserName(e.target.value)}
-                                                placeholder="Inserisci il tuo nome"
-                                                className="meal-input"
-                                            />
-                                        </div>
-
-                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                            <button
-                                                className="btn btn-primary"
-                                                style={{ flex: 1 }}
-                                                onClick={() => setRegistrationStep('create')}
-                                            >
-                                                🏠 Crea Famiglia
-                                            </button>
-                                            <button
-                                                className="btn btn-secondary"
-                                                style={{ flex: 1 }}
-                                                onClick={() => setRegistrationStep('join')}
-                                            >
-                                                👥 Unisciti
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-
-                                {registrationStep === 'create' && (
-                                    <>
-                                        <div className="success-message" style={{ marginTop: '20px' }}>
-                                            Stai per creare una nuova famiglia!
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                            <button className="btn btn-primary" onClick={createFamily} style={{ flex: 1 }}>
-                                                ✅ Crea
-                                            </button>
-                                            <button className="btn btn-secondary" onClick={() => setRegistrationStep('initial')} style={{ flex: 1 }}>
-                                                🔙 Indietro
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-
-                                {registrationStep === 'join' && (
-                                    <>
-                                        <div className="form-group" style={{ marginTop: '20px' }}>
-                                            <label>Codice Famiglia</label>
-                                            <input
-                                                type="text"
-                                                value={joinCode}
-                                                onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                                                placeholder="ES: ABC123"
-                                                className="meal-input"
-                                                style={{ textTransform: 'uppercase' }}
-                                            />
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                            <button className="btn btn-primary" onClick={joinFamily} style={{ flex: 1 }}>
-                                                ✅ Unisciti
-                                            </button>
-                                            <button className="btn btn-secondary" onClick={() => setRegistrationStep('initial')} style={{ flex: 1 }}>
-                                                🔙 Indietro
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        ) : (
-                            <>
-                                <div className="family-info">
-                                    <h3 style={{ fontFamily: 'Righteous', fontSize: '1.5rem', marginBottom: '15px' }}>👨‍👩‍👧‍👦 La Tua Famiglia</h3>
-                                    <div style={{ marginBottom: '15px' }}>
-                                        <p style={{ color: 'var(--text-muted)', marginBottom: '5px' }}>Codice Famiglia:</p>
-                                        <div className="code-display">{familyCode}</div>
-                                    </div>
-                                    <div className="member-list">
-                                        {familyMembers.map(member => (
-                                            <div key={member.id} className="member-item">
-                                                <div>
-                                                    <div className="member-name">{member.name}</div>
-                                                    <div className="member-status">
-                                                        {member.notificationsEnabled ? '🔔 Notifiche attive' : '🔕 Notifiche disattivate'}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="settings-section">
-                                    <h3>🔔 Notifiche Push</h3>
-                                    <div 
-                                        className="toggle-switch" 
-                                        onClick={toggleNotifications}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <div>
-                                            <div className="toggle-label">Notifiche Push</div>
-                                            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '5px' }}>
-                                                {notificationsEnabled ? 'Ricevi aggiornamenti in tempo reale' : 'Abilita per ricevere notifiche'}
-                                            </div>
-                                        </div>
-                                        <div className={`switch ${notificationsEnabled ? 'active' : ''}`}>
-                                            <div className="switch-handle"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <button 
-                                        className="btn btn-accent" 
-                                        onClick={checkNotificationStatus}
-                                        style={{ width: '100%', marginTop: '10px' }}
-                                    >
-                                        🔍 Debug Status
-                                    </button>
-                                    
-                                    <button 
-                                        className="btn btn-secondary" 
-                                        onClick={sendManualNotification}
-                                        style={{ width: '100%', marginTop: '10px' }}
-                                        disabled={!notificationsEnabled}
-                                    >
-                                        📢 Invia Notifica Test
-                                    </button>
-                                </div>
-
-                                <div className="action-bar">
-                                    <button className="btn btn-secondary" onClick={generateQRCode}>
-                                        📱 Condividi Codice
-                                    </button>
-                                    <button className="btn btn-primary" onClick={leaveFamily}>
-                                        🚪 Esci dalla Famiglia
-                                    </button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-
-                    {/* Menu Tab */}
+                    {/* TAB MENU */}
                     <div className={`tab-content ${activeTab === 'menu' ? 'active' : ''}`}>
-                        <div className="action-bar">
-                            <button className="btn btn-primary" onClick={() => setShowSaveMenuModal(true)}>
-                                💾 Salva Menu
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setShowLoadMenuModal(true)}>
-                                📂 Carica Menu
-                            </button>
-                            <button className="btn btn-accent" onClick={generateShoppingList}>
-                                🛒 Genera Spesa
-                            </button>
-                            <button className="btn btn-primary" onClick={clearMenu}>
-                                🗑️ Pulisci Tutto
-                            </button>
-                        </div>
-
-                        <div className="menu-grid">
+                        <div className="week-grid">
                             {daysOfWeek.map(day => (
                                 <div key={day} className="day-card">
-                                    <div className="day-title">{day}</div>
-                                    
+                                    <div className="day-name">{day}</div>
                                     <div className="meal-section">
-                                        <div className="meal-label">
-                                            🍝 Pranzo
-                                        </div>
-                                        {menu[day].lunch.map((meal, index) => (
-                                            <div key={`lunch-${index}`} className="meal-input-group">
-                                                <input
-                                                    type="text"
-                                                    className="meal-input"
-                                                    placeholder="Cosa mangiamo?"
-                                                    value={meal}
-                                                    onChange={(e) => updateMenu(day, 'lunch', index, e.target.value)}
-                                                />
-                                                {menu[day].lunch.length > 1 && (
-                                                    <button
-                                                        className="icon-btn"
-                                                        onClick={() => removeMealField(day, 'lunch', index)}
-                                                    >
-                                                        ❌
-                                                    </button>
-                                                )}
-                                            </div>
-                                        ))}
-                                        <button 
-                                            className="add-meal-btn"
-                                            onClick={() => addMealField(day, 'lunch')}
-                                        >
-                                            ➕ Aggiungi piatto
-                                        </button>
+                                        <div className="meal-label">🌅 Pranzo</div>
+                                        <input
+                                            type="text"
+                                            className="meal-input"
+                                            placeholder="Cosa mangiamo?"
+                                            value={weekMenu[day].lunch}
+                                            onChange={(e) => updateMeal(day, 'lunch', e.target.value)}
+                                        />
                                     </div>
-
                                     <div className="meal-section">
-                                        <div className="meal-label">
-                                            🍕 Cena
-                                        </div>
-                                        {menu[day].dinner.map((meal, index) => (
-                                            <div key={`dinner-${index}`} className="meal-input-group">
-                                                <input
-                                                    type="text"
-                                                    className="meal-input"
-                                                    placeholder="Cosa mangiamo?"
-                                                    value={meal}
-                                                    onChange={(e) => updateMenu(day, 'dinner', index, e.target.value)}
-                                                />
-                                                {menu[day].dinner.length > 1 && (
-                                                    <button
-                                                        className="icon-btn"
-                                                        onClick={() => removeMealField(day, 'dinner', index)}
-                                                    >
-                                                        ❌
-                                                    </button>
-                                                )}
-                                            </div>
-                                        ))}
-                                        <button 
-                                            className="add-meal-btn"
-                                            onClick={() => addMealField(day, 'dinner')}
-                                        >
-                                            ➕ Aggiungi piatto
-                                        </button>
+                                        <div className="meal-label">🌙 Cena</div>
+                                        <input
+                                            type="text"
+                                            className="meal-input"
+                                            placeholder="Cosa mangiamo?"
+                                            value={weekMenu[day].dinner}
+                                            onChange={(e) => updateMeal(day, 'dinner', e.target.value)}
+                                        />
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
 
-                    {/* Shopping Tab */}
-                    <div className={`tab-content ${activeTab === 'shopping' ? 'active' : ''}`}>
-                        <div className="action-bar">
-                            <button className="btn btn-primary" onClick={() => setShowSaveListModal(true)}>
-                                💾 Salva Lista
+                        <div className="action-buttons">
+                            <button className="btn btn-primary" onClick={generateShoppingList}>
+                                🛒 Genera Lista Spesa
                             </button>
-                            <button className="btn btn-secondary" onClick={() => setShowLoadListModal(true)}>
-                                📂 Carica Lista
+                            <button className="btn btn-secondary" onClick={() => setShowSaveMenuModal(true)}>
+                                💾 Salva Menu
                             </button>
-                            <button className="btn btn-accent" onClick={generateShoppingList}>
-                                📝 Da Menu
+                            <button className="btn btn-accent" onClick={() => setShowLoadMenuModal(true)}>
+                                📂 Carica Menu
                             </button>
-                            <button className="btn btn-primary" onClick={clearShoppingList}>
-                                🗑️ Pulisci Tutto
+                            <button className="btn btn-primary" onClick={clearMenu}>
+                                🗑️ Cancella Tutto
                             </button>
                         </div>
+                    </div>
 
+                    {/* TAB SHOPPING LIST */}
+                    <div className={`tab-content ${activeTab === 'shopping' ? 'active' : ''}`}>
                         <div className="shopping-list">
                             <div className="add-item-form">
-                                <div className="form-row">
-                                    <input
-                                        type="text"
-                                        className="meal-input"
-                                        placeholder="Nome prodotto..."
-                                        value={newItem.name}
-                                        onChange={(e) => setNewItem({...newItem, name: e.target.value})}
-                                        onKeyPress={(e) => e.key === 'Enter' && addShoppingItem()}
-                                    />
-                                    <input
-                                        type="text"
-                                        className="meal-input"
-                                        placeholder="Quantità..."
-                                        value={newItem.quantity}
-                                        onChange={(e) => setNewItem({...newItem, quantity: e.target.value})}
-                                        onKeyPress={(e) => e.key === 'Enter' && addShoppingItem()}
-                                    />
-                                    <select
-                                        className="select"
-                                        value={newItem.category}
-                                        onChange={(e) => setNewItem({...newItem, category: e.target.value})}
-                                    >
-                                        {categories.map(cat => (
-                                            <option key={cat} value={cat}>{cat}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <button className="btn btn-primary" onClick={addShoppingItem} style={{ width: '100%' }}>
-                                    ➕ Aggiungi Prodotto
+                                <input
+                                    type="text"
+                                    className="add-item-input"
+                                    placeholder="Aggiungi prodotto..."
+                                    value={newItem}
+                                    onChange={(e) => setNewItem(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && addItem()}
+                                />
+                                <button className="btn btn-primary" onClick={addItem}>
+                                    ➕ Aggiungi
                                 </button>
                             </div>
 
                             {shoppingList.length === 0 ? (
-                                <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '30px' }}>
-                                    Nessun prodotto nella lista.<br/>
-                                    Genera dalla settimana o aggiungi manualmente!
-                                </p>
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">🛒</div>
+                                    <h3>Lista vuota</h3>
+                                    <p>Aggiungi prodotti o genera la lista dal menu</p>
+                                </div>
                             ) : (
-                                <div>
+                                <div className="shopping-items">
                                     {shoppingList.map(item => (
-                                        <div key={item.id} className={`shopping-item ${item.checked ? 'checked' : ''}`}>
-                                            <input
-                                                type="checkbox"
-                                                className="checkbox"
-                                                checked={item.checked}
-                                                onChange={() => toggleShoppingItem(item.id)}
-                                            />
-                                            <div className="item-details">
-                                                <div className="item-name">{item.name}</div>
-                                                <div className="item-meta">
-                                                    {item.quantity && <span>{item.quantity} · </span>}
-                                                    <span className="category-badge">{item.category}</span>
-                                                </div>
-                                            </div>
+                                        <div
+                                            key={item.id}
+                                            className={`shopping-item ${item.checked ? 'checked' : ''}`}
+                                            onClick={() => toggleItem(item.id)}
+                                        >
+                                            <div className="checkbox"></div>
+                                            <span className="item-text">{item.name}</span>
                                             <button
-                                                className="icon-btn"
-                                                onClick={() => deleteShoppingItem(item.id)}
+                                                className="delete-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteItem(item.id);
+                                                }}
                                             >
-                                                🗑️
+                                                ✕
                                             </button>
                                         </div>
                                     ))}
                                 </div>
                             )}
+                        </div>
+
+                        <div className="action-buttons">
+                            <button className="btn btn-secondary" onClick={() => setShowSaveListModal(true)}>
+                                💾 Salva Lista
+                            </button>
+                            <button className="btn btn-accent" onClick={() => setShowLoadListModal(true)}>
+                                📂 Carica Lista
+                            </button>
+                            <button className="btn btn-primary" onClick={clearShoppingList}>
+                                🗑️ Cancella Tutto
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* TAB FAMIGLIA */}
+                    <div className={`tab-content ${activeTab === 'family' ? 'active' : ''}`}>
+                        <div className="family-info">
+                            <h3 style={{ textAlign: 'center', marginBottom: '10px', color: 'var(--text-muted)' }}>
+                                Codice Famiglia
+                            </h3>
+                            <div className="family-code">{familyCode}</div>
+                            
+                            <div className="members-list">
+                                <h4 style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>
+                                    Membri ({Object.keys(members).length})
+                                </h4>
+                                {Object.entries(members).map(([id, member]) => (
+                                    <div key={id} className="member-item">
+                                        <span className="member-name">
+                                            {member.name} {id === userId && '(Tu)'}
+                                        </span>
+                                        <span className="member-role">
+                                            {member.role === 'creator' ? '👑 Creatore' : '👤 Membro'}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="action-buttons">
+                            <button className="btn btn-secondary" onClick={showQRCode}>
+                                📱 Mostra QR Code
+                            </button>
+                            <button className="btn btn-primary" onClick={leaveFamily}>
+                                🚪 Esci dalla Famiglia
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* TAB IMPOSTAZIONI */}
+                    <div className={`tab-content ${activeTab === 'settings' ? 'active' : ''}`}>
+                        <div className="settings-section">
+                            <h3>⚙️ Impostazioni</h3>
+                            
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h4>🔔 Notifiche Push</h4>
+                                    <p>Ricevi notifiche quando il menu o la spesa vengono modificati</p>
+                                    {fcmToken && (
+                                        <p style={{ fontSize: '0.75rem', marginTop: '5px', opacity: 0.7 }}>
+                                            Token: {fcmToken.substring(0, 20)}...
+                                        </p>
+                                    )}
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={notificationsEnabled}
+                                        onChange={toggleNotifications}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            {notificationStatus && (
+                                <div className={`notification-status ${
+                                    notificationStatus.includes('✅') ? 'success' : 
+                                    notificationStatus.includes('❌') ? 'error' : 'info'
+                                }`}>
+                                    {notificationStatus}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="settings-section">
+                            <h3>ℹ️ Informazioni</h3>
+                            <div style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                                <p><strong>Nome:</strong> {userName}</p>
+                                <p><strong>Codice Famiglia:</strong> {familyCode}</p>
+                                <p><strong>Membro dal:</strong> {members[userId] ? new Date(members[userId].joinedAt).toLocaleDateString('it-IT') : '-'}</p>
+                                <p style={{ marginTop: '20px', fontSize: '0.85rem', opacity: 0.7 }}>
+                                    Versione 2.0 - Powered by Claude AI & Firebase
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -2070,7 +1789,7 @@
                                     <input
                                         type="text"
                                         className="meal-input"
-                                        placeholder="Es: Menu Gennaio, Ricette Estive..."
+                                        placeholder="Es: Menu Maggio, Menu Vegetariano..."
                                         value={templateName}
                                         onChange={(e) => setTemplateName(e.target.value)}
                                         onKeyPress={(e) => e.key === 'Enter' && saveMenu()}
