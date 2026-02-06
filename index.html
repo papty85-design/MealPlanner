@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Menu Famiglia - Pianificatore Settimanale</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="Organizza il menu settimanale e genera la lista della spesa automaticamente">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #1a1a2e;
+            --dark-alt: #16213e;
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --success: #06ffa5;
+            --card-bg: #252544;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Karla', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 80px;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--primary) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--secondary) 0%, transparent 50%),
+                radial-gradient(circle at 40% 90%, var(--accent) 0%, transparent 50%);
+            filter: blur(60px);
+            animation: morph 20s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            padding: 0 10px;
+        }
+
+        .header .powered-by {
+            margin-top: 10px;
+            font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+            color: var(--text-muted);
+            opacity: 0.6;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .header .powered-by a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .header .powered-by a:hover {
+            color: var(--accent);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--dark-alt);
+            padding: 6px;
+            border-radius: 20px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 15px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Karla', sans-serif;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-tab span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-tab:hover {
+            color: var(--text);
+        }
+
+        .nav-tab.active {
+            color: var(--text);
+        }
+
+        .nav-tab.active::before {
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .day-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+        }
+
+        .day-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .day-name {
+            font-family: 'Righteous', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .meal-section {
+            margin-bottom: 15px;
+        }
+
+        .meal-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .meal-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--dark-alt);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .meal-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: var(--dark);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+        }
+
+        .meal-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .shopping-list {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-item-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: var(--dark-alt);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+        }
+
+        .add-item-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .shopping-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--dark-alt);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .shopping-item:hover {
+            background: var(--dark);
+            transform: translateX(5px);
+        }
+
+        .shopping-item.checked {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .shopping-item.checked .checkbox {
+            background: var(--secondary);
+        }
+
+        .checkbox::after {
+            content: '✓';
+            color: var(--dark);
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .shopping-item.checked .checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 1.05rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.3rem;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Karla', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #ff5252);
+            color: var(--text);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), #3bb8af);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #ffd93d);
+            color: var(--dark);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 230, 109, 0.4);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            border: 2px solid var(--dark-alt);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-family: 'Righteous', cursive;
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 2rem;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+            background: var(--dark);
+            transform: rotate(90deg);
+        }
+
+        .family-setup {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .family-option {
+            background: var(--dark-alt);
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .family-option:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+        }
+
+        .family-option h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .family-option p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-top: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--dark-alt);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .qr-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .qr-container p {
+            color: var(--text-muted);
+            margin: 10px 0;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            white-space: nowrap;
+        }
+
+        .family-info {
+            background: var(--dark-alt);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .family-code {
+            font-family: 'Righteous', cursive;
+            font-size: 2rem;
+            color: var(--accent);
+            text-align: center;
+            margin: 10px 0;
+            letter-spacing: 3px;
+        }
+
+        .members-list {
+            margin-top: 15px;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .member-role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            background: var(--dark);
+            border-radius: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-family: 'Righteous', cursive;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .settings-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .settings-section h3 {
+            font-family: 'Righteous', cursive;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--dark-alt);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info h4 {
+            color: var(--text);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .setting-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark-alt);
+            border-radius: 34px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(28px);
+            background: white;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .template-card {
+            background: var(--dark-alt);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .template-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .template-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .icon-btn:hover {
+            background: var(--dark);
+            transform: scale(1.1);
+        }
+
+        .save-template-box {
+            background: var(--dark-alt);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .notification-status {
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-status.success {
+            background: rgba(6, 255, 165, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .notification-status.error {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .notification-status.info {
+            background: rgba(78, 205, 196, 0.1);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .share-options {
+                grid-template-columns: 1fr;
+            }
+
+            .add-item-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div id="root"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+    
+    <!-- React & Babel -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Configurazione Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAp_2VabxjEQek4Oo8118wSOsisoytyJ_I",
+            authDomain: "menu-settimanale-2913d.firebaseapp.com",
+            databaseURL: "https://menu-settimanale-2913d-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "menu-settimanale-2913d",
+            storageBucket: "menu-settimanale-2913d.firebasestorage.app",
+            messagingSenderId: "974523761082",
+            appId: "1:974523761082:web:4f4ad5c5d2b978e9f55d83"
+        };
+
+        // Inizializza Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+        
+        // Inizializza Firebase Messaging
+        let messaging = null;
+        if (firebase.messaging.isSupported()) {
+            try {
+                messaging = firebase.messaging();
+                console.log('Firebase Messaging inizializzato con successo');
+            } catch (error) {
+                console.warn('Errore inizializzazione Firebase Messaging:', error);
+            }
+        } else {
+            console.warn('Firebase Messaging non supportato su questo browser');
+        }
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('menu');
+            const [familyCode, setFamilyCode] = useState(localStorage.getItem('familyCode') || '');
+            const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
+            const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
+            const [showFamilySetup, setShowFamilySetup] = useState(false);
+            const [setupMode, setSetupMode] = useState('');
+            const [inputCode, setInputCode] = useState('');
+            const [inputName, setInputName] = useState('');
+            const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+            const [notificationStatus, setNotificationStatus] = useState('');
+            const [fcmToken, setFcmToken] = useState('');
+
+            // Stati per menu e shopping list
+            const [weekMenu, setWeekMenu] = useState({
+                Lunedì: { lunch: '', dinner: '' },
+                Martedì: { lunch: '', dinner: '' },
+                Mercoledì: { lunch: '', dinner: '' },
+                Giovedì: { lunch: '', dinner: '' },
+                Venerdì: { lunch: '', dinner: '' },
+                Sabato: { lunch: '', dinner: '' },
+                Domenica: { lunch: '', dinner: '' }
+            });
+
+            const [shoppingList, setShoppingList] = useState([]);
+            const [newItem, setNewItem] = useState('');
+            const [members, setMembers] = useState({});
+            const [showQRModal, setShowQRModal] = useState(false);
+            const [qrCodeUrl, setQrCodeUrl] = useState('');
+
+            // Stati per template
+            const [showSaveMenuModal, setShowSaveMenuModal] = useState(false);
+            const [showLoadMenuModal, setShowLoadMenuModal] = useState(false);
+            const [showSaveListModal, setShowSaveListModal] = useState(false);
+            const [showLoadListModal, setShowLoadListModal] = useState(false);
+            const [templateName, setTemplateName] = useState('');
+            const [savedMenus, setSavedMenus] = useState([]);
+            const [savedShoppingLists, setSavedShoppingLists] = useState([]);
+
+            const daysOfWeek = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+
+            // Controlla setup famiglia all'avvio
+            useEffect(() => {
+                const storedCode = localStorage.getItem('familyCode');
+                const storedName = localStorage.getItem('userName');
+                const storedUserId = localStorage.getItem('userId');
+                
+                if (!storedCode || !storedName || !storedUserId) {
+                    setShowFamilySetup(true);
+                } else {
+                    setFamilyCode(storedCode);
+                    setUserName(storedName);
+                    setUserId(storedUserId);
+                    // Carica lo stato delle notifiche da Firebase
+                    loadNotificationState(storedCode, storedUserId);
+                }
+            }, []);
+
+            // Carica stato notifiche da Firebase
+            const loadNotificationState = async (code, uid) => {
+                try {
+                    const memberRef = database.ref(`/families/${code}/members/${uid}`);
+                    const snapshot = await memberRef.once('value');
+                    const memberData = snapshot.val();
+                    
+                    if (memberData && memberData.notificationsEnabled) {
+                        setNotificationsEnabled(true);
+                        if (memberData.fcmToken) {
+                            setFcmToken(memberData.fcmToken);
+                            console.log('Notifiche già attive con token esistente');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Errore caricamento stato notifiche:', error);
+                }
+            };
+
+            // Sincronizza dati con Firebase
+            useEffect(() => {
+                if (familyCode && userId) {
+                    // Listener per menu
+                    const menuRef = database.ref(`/families/${familyCode}/menu`);
+                    menuRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setWeekMenu(data);
+                        }
+                    });
+
+                    // Listener per shopping list
+                    const shoppingRef = database.ref(`/families/${familyCode}/shoppingList`);
+                    shoppingRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setShoppingList(data);
+                        }
+                    });
+
+                    // Listener per membri
+                    const membersRef = database.ref(`/families/${familyCode}/members`);
+                    membersRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setMembers(data);
+                        }
+                    });
+
+                    // Listener per template menu
+                    const menusRef = database.ref(`/families/${familyCode}/savedMenus`);
+                    menusRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setSavedMenus(Object.entries(data).map(([id, menu]) => ({ id, ...menu })));
+                        }
+                    });
+
+                    // Listener per template liste
+                    const listsRef = database.ref(`/families/${familyCode}/savedLists`);
+                    listsRef.on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            setSavedShoppingLists(Object.entries(data).map(([id, list]) => ({ id, ...list })));
+                        }
+                    });
+
+                    // Aggiorna lastActive ogni 5 minuti
+                    const updateActivity = () => {
+                        database.ref(`/families/${familyCode}/members/${userId}/lastActive`).set(Date.now());
+                    };
+                    updateActivity();
+                    const activityInterval = setInterval(updateActivity, 5 * 60 * 1000);
+
+                    return () => {
+                        menuRef.off();
+                        shoppingRef.off();
+                        membersRef.off();
+                        menusRef.off();
+                        listsRef.off();
+                        clearInterval(activityInterval);
+                    };
+                }
+            }, [familyCode, userId]);
+
+            // Gestione notifiche push
+            const requestNotificationPermission = async () => {
+                if (!messaging) {
+                    setNotificationStatus('Le notifiche push non sono supportate su questo browser');
+                    return;
+                }
+
+                try {
+                    // Richiedi permesso notifiche
+                    const permission = await Notification.requestPermission();
+                    
+                    if (permission === 'granted') {
+                        console.log('Permesso notifiche concesso');
+                        
+                        // Registra service worker per Firebase Messaging
+                        const registration = await navigator.serviceWorker.register('/MealPlanner/firebase-messaging-sw.js', {
+                            scope: '/MealPlanner/'
+                        });
+                        
+                        console.log('Service Worker registrato:', registration);
+                        
+                        // Ottieni token FCM
+                        const token = await messaging.getToken({
+                            vapidKey: 'BGT7zunf0sbrqsSakzFudcTU5zE-W_m-IJWjAauTYtiycMvlVW0cfCqhahNF5Pn-2a7De0YroLhMMu_TQdE6xIQ', // Dovrai generare questa chiave nella console Firebase
+                            serviceWorkerRegistration: registration
+                        });
+                        
+                        console.log('Token FCM ottenuto:', token);
+                        setFcmToken(token);
+                        
+                        // Salva token e stato in Firebase
+                        await database.ref(`/families/${familyCode}/members/${userId}`).update({
+                            fcmToken: token,
+                            notificationsEnabled: true,
+                            lastTokenUpdate: Date.now()
+                        });
+                        
+                        setNotificationsEnabled(true);
+                        setNotificationStatus('✅ Notifiche attivate con successo!');
+                        
+                        // Gestisci messaggi in foreground
+                        messaging.onMessage((payload) => {
+                            console.log('Messaggio ricevuto in foreground:', payload);
+                            
+                            // Mostra notifica anche in foreground
+                            if (Notification.permission === 'granted') {
+                                new Notification(payload.notification.title, {
+                                    body: payload.notification.body,
+                                    icon: '/MealPlanner/icon-192.png',
+                                    badge: '/MealPlanner/icon-192.png',
+                                    tag: 'menu-famiglia'
+                                });
+                            }
+                        });
+                        
+                        // Test notifica
+                        setTimeout(() => {
+                            new Notification('Menu Famiglia', {
+                                body: '🎉 Notifiche configurate! Riceverai aggiornamenti del menu e della spesa.',
+                                icon: '/MealPlanner/icon-192.png',
+                                tag: 'welcome'
+                            });
+                        }, 1000);
+                        
+                    } else if (permission === 'denied') {
+                        setNotificationStatus('❌ Permesso negato. Abilitalo nelle impostazioni del browser.');
+                        setNotificationsEnabled(false);
+                    } else {
+                        setNotificationStatus('⚠️ Permesso non concesso');
+                        setNotificationsEnabled(false);
+                    }
+                } catch (error) {
+                    console.error('Errore richiesta notifiche:', error);
+                    setNotificationStatus(`❌ Errore: ${error.message}`);
+                    setNotificationsEnabled(false);
+                }
+            };
+
+            const disableNotifications = async () => {
+                try {
+                    // Aggiorna stato in Firebase
+                    await database.ref(`/families/${familyCode}/members/${userId}`).update({
+                        notificationsEnabled: false,
+                        fcmToken: null
+                    });
+                    
+                    setNotificationsEnabled(false);
+                    setFcmToken('');
+                    setNotificationStatus('🔕 Notifiche disattivate');
+                    
+                    console.log('Notifiche disattivate');
+                } catch (error) {
+                    console.error('Errore disattivazione notifiche:', error);
+                    setNotificationStatus(`❌ Errore: ${error.message}`);
+                }
+            };
+
+            const toggleNotifications = async () => {
+                if (notificationsEnabled) {
+                    await disableNotifications();
+                } else {
+                    await requestNotificationPermission();
+                }
+            };
+
+            const sendTestNotification = async () => {
+                if (!('Notification' in window)) {
+                    setNotificationStatus('Le notifiche non sono supportate');
+                    return;
+                }
+
+                if (Notification.permission !== 'granted') {
+                    setNotificationStatus('Permesso notifiche non concesso');
+                    return;
+                }
+
+                try {
+                    const notification = new Notification('Test Notifica', {
+                        body: 'Le notifiche funzionano correttamente!',
+                        icon: '/MealPlanner/icon-192.png',
+                        badge: '/MealPlanner/icon-192.png',
+                        vibrate: [200, 100, 200],
+                        tag: 'test-notification'
+                    });
+
+                    notification.onclick = () => {
+                        window.focus();
+                        notification.close();
+                    };
+
+                    setNotificationStatus('Notifica di test inviata!');
+                    setTimeout(() => setNotificationStatus(''), 3000);
+                } catch (error) {
+                    console.error('Errore invio notifica di test:', error);
+                    setNotificationStatus('Errore: ' + error.message);
+                }
+            };
+
+            // Funzioni famiglia
+            const createFamily = () => {
+                if (!inputName.trim()) {
+                    alert('Inserisci il tuo nome!');
+                    return;
+                }
+                
+                const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+                const uid = `user_${Date.now()}`;
+                
+                database.ref(`/families/${code}`).set({
+                    createdAt: Date.now(),
+                    createdBy: inputName,
+                    menu: weekMenu,
+                    shoppingList: [],
+                    members: {
+                        [uid]: {
+                            name: inputName,
+                            role: 'creator',
+                            joinedAt: Date.now(),
+                            lastActive: Date.now(),
+                            notificationsEnabled: false
+                        }
+                    }
+                });
+                
+                localStorage.setItem('familyCode', code);
+                localStorage.setItem('userName', inputName);
+                localStorage.setItem('userId', uid);
+                
+                setFamilyCode(code);
+                setUserName(inputName);
+                setUserId(uid);
+                setShowFamilySetup(false);
+            };
+
+            const joinFamily = () => {
+                if (!inputCode.trim() || !inputName.trim()) {
+                    alert('Inserisci il codice famiglia e il tuo nome!');
+                    return;
+                }
+                
+                const code = inputCode.toUpperCase();
+                const uid = `user_${Date.now()}`;
+                
+                database.ref(`/families/${code}`).once('value', (snapshot) => {
+                    if (snapshot.exists()) {
+                        database.ref(`/families/${code}/members/${uid}`).set({
+                            name: inputName,
+                            role: 'member',
+                            joinedAt: Date.now(),
+                            lastActive: Date.now(),
+                            notificationsEnabled: false
+                        });
+                        
+                        localStorage.setItem('familyCode', code);
+                        localStorage.setItem('userName', inputName);
+                        localStorage.setItem('userId', uid);
+                        
+                        setFamilyCode(code);
+                        setUserName(inputName);
+                        setUserId(uid);
+                        setShowFamilySetup(false);
+                    } else {
+                        alert('Codice famiglia non valido!');
+                    }
+                });
+            };
+
+            const leaveFamily = () => {
+                if (confirm('Sei sicuro di voler uscire dalla famiglia?')) {
+                    database.ref(`/families/${familyCode}/members/${userId}`).remove();
+                    localStorage.removeItem('familyCode');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userId');
+                    setFamilyCode('');
+                    setUserName('');
+                    setUserId('');
+                    setShowFamilySetup(true);
+                }
+            };
+
+            // Funzioni menu
+            const updateMeal = (day, mealType, value) => {
+                const updatedMenu = { ...weekMenu };
+                updatedMenu[day][mealType] = value;
+                setWeekMenu(updatedMenu);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/menu/${day}/${mealType}`).set(value);
+                }
+            };
+
+            const clearMenu = () => {
+                if (confirm('Vuoi cancellare tutto il menu?')) {
+                    const emptyMenu = {};
+                    daysOfWeek.forEach(day => {
+                        emptyMenu[day] = { lunch: '', dinner: '' };
+                    });
+                    setWeekMenu(emptyMenu);
+                    
+                    if (familyCode) {
+                        database.ref(`/families/${familyCode}/menu`).set(emptyMenu);
+                    }
+                }
+            };
+
+            const generateShoppingList = () => {
+                const items = [];
+                
+                // Funzione helper per estrarre ingredienti da un piatto
+                const extractIngredients = (dishName) => {
+                    if (!dishName || dishName.trim() === '') return [];
+                    
+                    // Split per virgole e "e" / "&"
+                    let ingredients = dishName
+                        .split(/,|\se\s|\s&\s/) // Separa per virgola, " e ", " & "
+                        .map(ing => ing.trim())
+                        .filter(ing => ing.length > 0);
+                    
+                    return ingredients;
+                };
+                
+                Object.values(weekMenu).forEach(day => {
+                    if (day.lunch) {
+                        const lunchIngredients = extractIngredients(day.lunch);
+                        lunchIngredients.forEach(ingredient => {
+                            // Evita duplicati (case-insensitive)
+                            const exists = items.find(item => 
+                                item.name.toLowerCase() === ingredient.toLowerCase()
+                            );
+                            if (!exists) {
+                                items.push({ 
+                                    id: Date.now() + Math.random(), 
+                                    name: ingredient,
+                                    checked: false 
+                                });
+                            }
+                        });
+                    }
+                    
+                    if (day.dinner) {
+                        const dinnerIngredients = extractIngredients(day.dinner);
+                        dinnerIngredients.forEach(ingredient => {
+                            const exists = items.find(item => 
+                                item.name.toLowerCase() === ingredient.toLowerCase()
+                            );
+                            if (!exists) {
+                                items.push({ 
+                                    id: Date.now() + Math.random(), 
+                                    name: ingredient,
+                                    checked: false 
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                setShoppingList(items);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/shoppingList`).set(items);
+                }
+                
+                setActiveTab('shopping');
+            };
+
+            // Funzioni di esportazione
+            const exportShoppingListText = () => {
+                let text = '🛒 LISTA DELLA SPESA\n\n';
+                
+                const unchecked = shoppingList.filter(item => !item.checked);
+                const checked = shoppingList.filter(item => item.checked);
+                
+                if (unchecked.length > 0) {
+                    text += '📝 DA COMPRARE:\n';
+                    unchecked.forEach(item => {
+                        text += `☐ ${item.name}\n`;
+                    });
+                }
+                
+                if (checked.length > 0) {
+                    text += '\n✅ GIÀ PRESO:\n';
+                    checked.forEach(item => {
+                        text += `☑ ${item.name}\n`;
+                    });
+                }
+                
+                text += `\n📅 ${new Date().toLocaleDateString('it-IT')}\n`;
+                
+                return text;
+            };
+
+            const exportMenuText = () => {
+                let text = '🍽️ MENU SETTIMANALE\n\n';
+                
+                const daysOfWeek = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
+                
+                daysOfWeek.forEach(day => {
+                    if (weekMenu[day] && (weekMenu[day].lunch || weekMenu[day].dinner)) {
+                        text += `📅 ${day.toUpperCase()}\n`;
+                        if (weekMenu[day].lunch) {
+                            text += `  🌞 Pranzo: ${weekMenu[day].lunch}\n`;
+                        }
+                        if (weekMenu[day].dinner) {
+                            text += `  🌙 Cena: ${weekMenu[day].dinner}\n`;
+                        }
+                        text += '\n';
+                    }
+                });
+                
+                return text;
+            };
+
+            const shareOnWhatsApp = (type) => {
+                const text = type === 'menu' ? exportMenuText() : exportShoppingListText();
+                const encodedText = encodeURIComponent(text);
+                const url = `https://wa.me/?text=${encodedText}`;
+                window.open(url, '_blank');
+            };
+
+            const copyToClipboard = (type) => {
+                const text = type === 'menu' ? exportMenuText() : exportShoppingListText();
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('✅ Copiato negli appunti!');
+                }).catch(err => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('✅ Copiato negli appunti!');
+                });
+            };
+
+            const downloadAsFile = (type) => {
+                const text = type === 'menu' ? exportMenuText() : exportShoppingListText();
+                const filename = type === 'menu' 
+                    ? `menu_${new Date().toISOString().slice(0,10)}.txt`
+                    : `lista_spesa_${new Date().toISOString().slice(0,10)}.txt`;
+                
+                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            };
+
+            // Funzioni shopping list
+            const addItem = () => {
+                if (newItem.trim()) {
+                    const item = {
+                        id: Date.now(),
+                        name: newItem,
+                        checked: false
+                    };
+                    const updatedList = [...shoppingList, item];
+                    setShoppingList(updatedList);
+                    setNewItem('');
+                    
+                    if (familyCode) {
+                        database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
+                    }
+                }
+            };
+
+            const toggleItem = (id) => {
+                const updatedList = shoppingList.map(item =>
+                    item.id === id ? { ...item, checked: !item.checked } : item
+                );
+                setShoppingList(updatedList);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
+                }
+            };
+
+            const deleteItem = (id) => {
+                const updatedList = shoppingList.filter(item => item.id !== id);
+                setShoppingList(updatedList);
+                
+                if (familyCode) {
+                    database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
+                }
+            };
+
+            const clearShoppingList = () => {
+                if (confirm('Vuoi cancellare tutta la lista della spesa?')) {
+                    setShoppingList([]);
+                    
+                    if (familyCode) {
+                        database.ref(`/families/${familyCode}/shoppingList`).set([]);
+                    }
+                }
+            };
+
+            // Funzioni template
+            const saveMenu = () => {
+                if (!templateName.trim()) {
+                    alert('Inserisci un nome per il menu!');
+                    return;
+                }
+                
+                const menuId = `menu_${Date.now()}`;
+                const menuData = {
+                    name: templateName,
+                    menu: weekMenu,
+                    createdAt: Date.now(),
+                    createdBy: userName
+                };
+                
+                database.ref(`/families/${familyCode}/savedMenus/${menuId}`).set(menuData);
+                setShowSaveMenuModal(false);
+                setTemplateName('');
+                alert('Menu salvato!');
+            };
+
+            const loadMenu = (menuId) => {
+                const menu = savedMenus.find(m => m.id === menuId);
+                if (menu) {
+                    setWeekMenu(menu.menu);
+                    database.ref(`/families/${familyCode}/menu`).set(menu.menu);
+                    setShowLoadMenuModal(false);
+                }
+            };
+
+            const deleteMenu = (menuId) => {
+                if (confirm('Vuoi eliminare questo menu salvato?')) {
+                    database.ref(`/families/${familyCode}/savedMenus/${menuId}`).remove();
+                }
+            };
+
+            const saveShoppingList = () => {
+                if (!templateName.trim()) {
+                    alert('Inserisci un nome per la lista!');
+                    return;
+                }
+                
+                const listId = `list_${Date.now()}`;
+                const listData = {
+                    name: templateName,
+                    list: shoppingList,
+                    createdAt: Date.now(),
+                    createdBy: userName
+                };
+                
+                database.ref(`/families/${familyCode}/savedLists/${listId}`).set(listData);
+                setShowSaveListModal(false);
+                setTemplateName('');
+                alert('Lista salvata!');
+            };
+
+            const loadShoppingList = (listId) => {
+                const list = savedShoppingLists.find(l => l.id === listId);
+                if (list) {
+                    setShoppingList(list.list);
+                    database.ref(`/families/${familyCode}/shoppingList`).set(list.list);
+                    setShowLoadListModal(false);
+                }
+            };
+
+            const deleteShoppingList = (listId) => {
+                if (confirm('Vuoi eliminare questa lista salvata?')) {
+                    database.ref(`/families/${familyCode}/savedLists/${listId}`).remove();
+                }
+            };
+
+            // Funzioni condivisione
+            const showQRCode = () => {
+                const url = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${window.location.origin}/MealPlanner/index.html?code=${familyCode}`;
+                setQrCodeUrl(url);
+                setShowQRModal(true);
+            };
+
+            const shareQRCode = (method) => {
+                const shareUrl = `${window.location.origin}/MealPlanner/index.html?code=${familyCode}`;
+                const shareText = `Unisciti alla nostra famiglia su Menu Famiglia! Codice: ${familyCode}`;
+                
+                switch(method) {
+                    case 'whatsapp':
+                        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + '\n' + shareUrl)}`, '_blank');
+                        break;
+                    case 'copy':
+                        navigator.clipboard.writeText(shareUrl);
+                        alert('Link copiato negli appunti!');
+                        break;
+                    case 'download':
+                        const link = document.createElement('a');
+                        link.href = qrCodeUrl;
+                        link.download = `QR-Code-Famiglia-${familyCode}.png`;
+                        link.click();
+                        break;
+                }
+            };
+
+            // Gestione query params per auto-join
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const codeParam = urlParams.get('code');
+                
+                if (codeParam && !familyCode) {
+                    setInputCode(codeParam);
+                    setSetupMode('join');
+                    setShowFamilySetup(true);
+                }
+            }, []);
+
+            if (showFamilySetup) {
+                return (
+                    <div className="container">
+                        <div className="header">
+                            <h1>🍽️ Menu Famiglia</h1>
+                            <p>Organizza il menu settimanale con la tua famiglia</p>
+                        </div>
+
+                        <div className="modal" style={{ position: 'fixed' }}>
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h3>👨‍👩‍👧‍👦 Benvenuto!</h3>
+                                </div>
+
+                                {!setupMode ? (
+                                    <div className="family-setup">
+                                        <div className="family-option" onClick={() => setSetupMode('create')}>
+                                            <h4>✨ Crea nuova famiglia</h4>
+                                            <p>Inizia un nuovo menu condiviso</p>
+                                        </div>
+                                        <div className="family-option" onClick={() => setSetupMode('join')}>
+                                            <h4>🤝 Unisciti a famiglia</h4>
+                                            <p>Entra in una famiglia esistente</p>
+                                        </div>
+                                    </div>
+                                ) : setupMode === 'create' ? (
+                                    <div>
+                                        <div className="input-group">
+                                            <label>Il tuo nome</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Es: Mario"
+                                                value={inputName}
+                                                onChange={(e) => setInputName(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && createFamily()}
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                            <button className="btn btn-secondary" onClick={() => setSetupMode('')}>
+                                                ← Indietro
+                                            </button>
+                                            <button className="btn btn-primary" style={{ flex: 1 }} onClick={createFamily}>
+                                                Crea Famiglia
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div className="input-group">
+                                            <label>Codice famiglia</label>
+                                            <input
+                                                type="text"
+                                                placeholder="ES: ABC123"
+                                                value={inputCode}
+                                                onChange={(e) => setInputCode(e.target.value.toUpperCase())}
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label>Il tuo nome</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Es: Mario"
+                                                value={inputName}
+                                                onChange={(e) => setInputName(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && joinFamily()}
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                            <button className="btn btn-secondary" onClick={() => setSetupMode('')}>
+                                                ← Indietro
+                                            </button>
+                                            <button className="btn btn-primary" style={{ flex: 1 }} onClick={joinFamily}>
+                                                Unisciti
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <h1>🍽️ Menu Famiglia</h1>
+                        <p>Ciao {userName}! Benvenuto nella famiglia <strong>{familyCode}</strong></p>
+                        <div className="powered-by">
+                            Powered by Fester85
+                        </div>
+                    </div>
+
+                    <div className="nav-tabs">
+                        <button
+                            className={`nav-tab ${activeTab === 'menu' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('menu')}
+                        >
+                            <span>📅 Menu</span>
+                        </button>
+                        <button
+                            className={`nav-tab ${activeTab === 'shopping' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('shopping')}
+                        >
+                            <span>🛒 Spesa</span>
+                        </button>
+                        <button
+                            className={`nav-tab ${activeTab === 'family' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('family')}
+                        >
+                            <span>👨‍👩‍👧‍👦 Famiglia</span>
+                        </button>
+                        <button
+                            className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('settings')}
+                        >
+                            <span>⚙️ Impostazioni</span>
+                        </button>
+                    </div>
+
+                    {/* TAB MENU */}
+                    <div className={`tab-content ${activeTab === 'menu' ? 'active' : ''}`}>
+                        <div className="week-grid">
+                            {daysOfWeek.map(day => (
+                                <div key={day} className="day-card">
+                                    <div className="day-name">{day}</div>
+                                    <div className="meal-section">
+                                        <div className="meal-label">🌅 Pranzo</div>
+                                        <input
+                                            type="text"
+                                            className="meal-input"
+                                            placeholder="Cosa mangiamo?"
+                                            value={weekMenu[day].lunch}
+                                            onChange={(e) => updateMeal(day, 'lunch', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="meal-section">
+                                        <div className="meal-label">🌙 Cena</div>
+                                        <input
+                                            type="text"
+                                            className="meal-input"
+                                            placeholder="Cosa mangiamo?"
+                                            value={weekMenu[day].dinner}
+                                            onChange={(e) => updateMeal(day, 'dinner', e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="action-buttons">
+                            <button className="btn btn-primary" onClick={generateShoppingList}>
+                                🛒 Genera Lista Spesa
+                            </button>
+                            <button className="btn btn-secondary" onClick={() => setShowSaveMenuModal(true)}>
+                                💾 Salva Menu
+                            </button>
+                            <button className="btn btn-accent" onClick={() => setShowLoadMenuModal(true)}>
+                                📂 Carica Menu
+                            </button>
+                            <button className="btn btn-primary" onClick={clearMenu}>
+                                🗑️ Cancella Tutto
+                            </button>
+                        </div>
+                        <div className="action-buttons" style={{ marginTop: '15px' }}>
+                            <button className="btn btn-secondary" onClick={() => shareOnWhatsApp('menu')}>
+                                💬 Condividi
+                            </button>
+                            <button className="btn btn-accent" onClick={() => copyToClipboard('menu')}>
+                                📋 Copia
+                            </button>
+                            <button className="btn btn-primary" onClick={() => downloadAsFile('menu')}>
+                                📥 Scarica
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* TAB SHOPPING LIST */}
+                    <div className={`tab-content ${activeTab === 'shopping' ? 'active' : ''}`}>
+                        <div className="shopping-list">
+                            <div className="add-item-form">
+                                <input
+                                    type="text"
+                                    className="add-item-input"
+                                    placeholder="Aggiungi prodotto..."
+                                    value={newItem}
+                                    onChange={(e) => setNewItem(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && addItem()}
+                                />
+                                <button className="btn btn-primary" onClick={addItem}>
+                                    ➕ Aggiungi
+                                </button>
+                            </div>
+
+                            {shoppingList.length === 0 ? (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">🛒</div>
+                                    <h3>Lista vuota</h3>
+                                    <p>Aggiungi prodotti o genera la lista dal menu</p>
+                                </div>
+                            ) : (
+                                <div className="shopping-items">
+                                    {shoppingList.map(item => (
+                                        <div
+                                            key={item.id}
+                                            className={`shopping-item ${item.checked ? 'checked' : ''}`}
+                                            onClick={() => toggleItem(item.id)}
+                                        >
+                                            <div className="checkbox"></div>
+                                            <span className="item-text">{item.name}</span>
+                                            <button
+                                                className="delete-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteItem(item.id);
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="action-buttons">
+                            <button className="btn btn-secondary" onClick={() => setShowSaveListModal(true)}>
+                                💾 Salva Lista
+                            </button>
+                            <button className="btn btn-accent" onClick={() => setShowLoadListModal(true)}>
+                                📂 Carica Lista
+                            </button>
+                            <button className="btn btn-primary" onClick={clearShoppingList}>
+                                🗑️ Cancella Tutto
+                            </button>
+                        </div>
+                        <div className="action-buttons" style={{ marginTop: '15px' }}>
+                            <button className="btn btn-secondary" onClick={() => shareOnWhatsApp('shopping')}>
+                                💬 Condividi
+                            </button>
+                            <button className="btn btn-accent" onClick={() => copyToClipboard('shopping')}>
+                                📋 Copia
+                            </button>
+                            <button className="btn btn-primary" onClick={() => downloadAsFile('shopping')}>
+                                📥 Scarica
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* TAB FAMIGLIA */}
+                    <div className={`tab-content ${activeTab === 'family' ? 'active' : ''}`}>
+                        <div className="family-info">
+                            <h3 style={{ textAlign: 'center', marginBottom: '10px', color: 'var(--text-muted)' }}>
+                                Codice Famiglia
+                            </h3>
+                            <div className="family-code">{familyCode}</div>
+                            
+                            <div className="members-list">
+                                <h4 style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>
+                                    Membri ({Object.keys(members).length})
+                                </h4>
+                                {Object.entries(members).map(([id, member]) => (
+                                    <div key={id} className="member-item">
+                                        <span className="member-name">
+                                            {member.name} {id === userId && '(Tu)'}
+                                        </span>
+                                        <span className="member-role">
+                                            {member.role === 'creator' ? '👑 Creatore' : '👤 Membro'}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="action-buttons">
+                            <button className="btn btn-secondary" onClick={showQRCode}>
+                                📱 Mostra QR Code
+                            </button>
+                            <button className="btn btn-primary" onClick={leaveFamily}>
+                                🚪 Esci dalla Famiglia
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* TAB IMPOSTAZIONI */}
+                    <div className={`tab-content ${activeTab === 'settings' ? 'active' : ''}`}>
+                        <div className="settings-section">
+                            <h3>⚙️ Impostazioni</h3>
+                            
+                            <div className="setting-item">
+                                <div className="setting-info">
+                                    <h4>🔔 Notifiche Push</h4>
+                                    <p>Ricevi notifiche quando il menu o la spesa vengono modificati</p>
+                                    {fcmToken && (
+                                        <p style={{ fontSize: '0.75rem', marginTop: '5px', opacity: 0.7 }}>
+                                            Token: {fcmToken.substring(0, 20)}...
+                                        </p>
+                                    )}
+                                </div>
+                                <label className="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={notificationsEnabled}
+                                        onChange={toggleNotifications}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            {notificationsEnabled && (
+                                <div className="setting-item" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                    <button 
+                                        className="btn btn-secondary"
+                                        onClick={sendTestNotification}
+                                        style={{ width: '100%', padding: '12px' }}
+                                    >
+                                        Invia Notifica di Test
+                                    </button>
+                                </div>
+                            )}
+                            
+                            {notificationStatus && (
+                                <div className={`notification-status ${
+                                    notificationStatus.includes('✅') ? 'success' : 
+                                    notificationStatus.includes('❌') ? 'error' : 'info'
+                                }`}>
+                                    {notificationStatus}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="settings-section">
+                            <h3>ℹ️ Informazioni</h3>
+                            <div style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                                <p><strong>Nome:</strong> {userName}</p>
+                                <p><strong>Codice Famiglia:</strong> {familyCode}</p>
+                                <p><strong>Membro dal:</strong> {members[userId] ? new Date(members[userId].joinedAt).toLocaleDateString('it-IT') : '-'}</p>
+                                <p style={{ marginTop: '20px', fontSize: '0.85rem', opacity: 0.7 }}>
+                                    Versione 2.0 - Powered by Fester85
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Save Menu Modal */}
+                    {showSaveMenuModal && (
+                        <div className="modal" onClick={() => setShowSaveMenuModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h3>💾 Salva Menu</h3>
+                                    <button className="close-btn" onClick={() => setShowSaveMenuModal(false)}>✕</button>
+                                </div>
+                                <div className="save-template-box">
+                                    <p style={{ marginBottom: '15px', color: 'var(--text-muted)' }}>
+                                        Dai un nome al tuo menu settimanale
+                                    </p>
+                                    <input
+                                        type="text"
+                                        className="meal-input"
+                                        placeholder="Es: Menu Maggio, Menu Vegetariano..."
+                                        value={templateName}
+                                        onChange={(e) => setTemplateName(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && saveMenu()}
+                                        autoFocus
+                                    />
+                                    <button 
+                                        className="btn btn-primary" 
+                                        style={{ width: '100%', marginTop: '15px' }}
+                                        onClick={saveMenu}
+                                    >
+                                        💾 Salva
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Load Menu Modal */}
+                    {showLoadMenuModal && (
+                        <div className="modal" onClick={() => setShowLoadMenuModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h3>📂 Carica Menu</h3>
+                                    <button className="close-btn" onClick={() => setShowLoadMenuModal(false)}>✕</button>
+                                </div>
+                                {savedMenus.length === 0 ? (
+                                    <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '30px' }}>
+                                        Nessun menu salvato ancora
+                                    </p>
+                                ) : (
+                                    <div className="template-grid">
+                                        {savedMenus.map(menu => (
+                                            <div key={menu.id} className="template-card" onClick={() => loadMenu(menu.id)}>
+                                                <div className="template-header">
+                                                    <div>
+                                                        <div className="template-name">{menu.name}</div>
+                                                        <div className="template-date">
+                                                            {new Date(menu.createdAt).toLocaleDateString('it-IT')}
+                                                        </div>
+                                                    </div>
+                                                    <div className="template-actions">
+                                                        <button 
+                                                            className="icon-btn" 
+                                                            onClick={(e) => { e.stopPropagation(); deleteMenu(menu.id); }}
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Save Shopping List Modal */}
+                    {showSaveListModal && (
+                        <div className="modal" onClick={() => setShowSaveListModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h3>💾 Salva Lista</h3>
+                                    <button className="close-btn" onClick={() => setShowSaveListModal(false)}>✕</button>
+                                </div>
+                                <div className="save-template-box">
+                                    <p style={{ marginBottom: '15px', color: 'var(--text-muted)' }}>
+                                        Dai un nome alla tua lista della spesa
+                                    </p>
+                                    <input
+                                        type="text"
+                                        className="meal-input"
+                                        placeholder="Es: Spesa Mensile, Lista Base..."
+                                        value={templateName}
+                                        onChange={(e) => setTemplateName(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && saveShoppingList()}
+                                        autoFocus
+                                    />
+                                    <button 
+                                        className="btn btn-primary" 
+                                        style={{ width: '100%', marginTop: '15px' }}
+                                        onClick={saveShoppingList}
+                                    >
+                                        💾 Salva
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Load Shopping List Modal */}
+                    {showLoadListModal && (
+                        <div className="modal" onClick={() => setShowLoadListModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h3>📂 Carica Lista</h3>
+                                    <button className="close-btn" onClick={() => setShowLoadListModal(false)}>✕</button>
+                                </div>
+                                {savedShoppingLists.length === 0 ? (
+                                    <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '30px' }}>
+                                        Nessuna lista salvata ancora
+                                    </p>
+                                ) : (
+                                    <div className="template-grid">
+                                        {savedShoppingLists.map(list => (
+                                            <div key={list.id} className="template-card" onClick={() => loadShoppingList(list.id)}>
+                                                <div className="template-header">
+                                                    <div>
+                                                        <div className="template-name">{list.name}</div>
+                                                        <div className="template-date">
+                                                            {new Date(list.createdAt).toLocaleDateString('it-IT')} · {list.list.length} prodotti
+                                                        </div>
+                                                    </div>
+                                                    <div className="template-actions">
+                                                        <button 
+                                                            className="icon-btn" 
+                                                            onClick={(e) => { e.stopPropagation(); deleteShoppingList(list.id); }}
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* QR Code Modal */}
+                    {showQRModal && (
+                        <div className="modal" onClick={() => setShowQRModal(false)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <h3>📱 Codice QR</h3>
+                                    <button className="close-btn" onClick={() => setShowQRModal(false)}>✕</button>
+                                </div>
+                                <div className="qr-container">
+                                    <img src={qrCodeUrl} alt="QR Code" />
+                                    <p>Scansiona per unirti alla famiglia</p>
+                                    <p style={{ fontWeight: 'bold', marginTop: '10px' }}>Codice: {familyCode}</p>
+                                </div>
+                                <div className="share-options">
+                                    <button className="btn btn-secondary share-btn" onClick={() => shareQRCode('whatsapp')}>
+                                        💬 WhatsApp
+                                    </button>
+                                    <button className="btn btn-accent share-btn" onClick={() => shareQRCode('copy')}>
+                                        📋 Copia Link
+                                    </button>
+                                    <button className="btn btn-primary share-btn" onClick={() => shareQRCode('download')}>
+                                        📥 Scarica QR
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+
+        // Registrazione service worker generale (per funzionalità offline/PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/MealPlanner/sw.js', {
+                    scope: '/MealPlanner/'
+                })
+                    .then(reg => console.log('SW generale OK:', reg.scope))
+                    .catch(err => console.log('SW Error:', err));
+            });
+        }
+    </script>
+</body>
+</html>
