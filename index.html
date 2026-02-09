@@ -175,10 +175,6 @@
             z-index: 1;
         }
 
-        .nav-tab:hover {
-            color: var(--text);
-        }
-
         .nav-tab.active {
             color: var(--text);
         }
@@ -187,9 +183,14 @@
             opacity: 1;
         }
 
+        .nav-tab:hover:not(.active) {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s ease-in;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .tab-content.active {
@@ -201,7 +202,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .week-grid {
+        .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 15px;
@@ -212,52 +213,43 @@
             background: var(--card-bg);
             border-radius: 20px;
             padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .day-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
         }
 
         .day-card:hover {
             transform: translateY(-5px);
             border-color: var(--secondary);
-            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+            box-shadow: 0 12px 40px rgba(78, 205, 196, 0.2);
         }
 
-        .day-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .day-name {
+        .day-card h3 {
             font-family: 'Righteous', cursive;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 15px;
-            color: var(--accent);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .meal-section {
             margin-bottom: 15px;
         }
 
+        .meal-section:last-child {
+            margin-bottom: 0;
+        }
+
         .meal-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         .meal-input {
@@ -270,13 +262,13 @@
             font-family: 'Karla', sans-serif;
             font-size: 1rem;
             transition: all 0.3s ease;
+            outline: none;
         }
 
         .meal-input:focus {
-            outline: none;
             border-color: var(--secondary);
             background: var(--dark);
-            box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.1);
         }
 
         .meal-input::placeholder {
@@ -288,123 +280,47 @@
             background: var(--card-bg);
             border-radius: 20px;
             padding: 25px;
-            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .add-item-form {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .add-item-input {
+        .add-item-form input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 14px 18px;
             background: var(--dark-alt);
             border: 2px solid transparent;
-            border-radius: 12px;
+            border-radius: 15px;
             color: var(--text);
             font-family: 'Karla', sans-serif;
             font-size: 1rem;
-        }
-
-        .add-item-input:focus {
+            transition: all 0.3s ease;
             outline: none;
-            border-color: var(--secondary);
         }
 
-        .shopping-items {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .shopping-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            background: var(--dark-alt);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .shopping-item:hover {
+        .add-item-form input:focus {
+            border-color: var(--accent);
             background: var(--dark);
-            transform: translateX(5px);
-        }
-
-        .shopping-item.checked {
-            opacity: 0.5;
-            text-decoration: line-through;
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--secondary);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        .shopping-item.checked .checkbox {
-            background: var(--secondary);
-        }
-
-        .checkbox::after {
-            content: '✓';
-            color: var(--dark);
-            font-weight: bold;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s ease;
-        }
-
-        .shopping-item.checked .checkbox::after {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .item-text {
-            flex: 1;
-            font-size: 1.05rem;
-        }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.3rem;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-            padding: 5px;
-        }
-
-        .delete-btn:hover {
-            opacity: 1;
-            transform: scale(1.2);
+            box-shadow: 0 0 0 4px rgba(255, 230, 109, 0.1);
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 14px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             font-family: 'Karla', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
             position: relative;
             overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn::before {
@@ -420,7 +336,7 @@
             transition: width 0.6s, height 0.6s;
         }
 
-        .btn:hover::before {
+        .btn:active::before {
             width: 300px;
             height: 300px;
         }
@@ -431,40 +347,275 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #ff5252);
-            color: var(--text);
+            background: linear-gradient(135deg, var(--primary), #ff8787);
+            color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary), #3bb8af);
-            color: var(--text);
+            background: linear-gradient(135deg, var(--secondary), #6fe9de);
+            color: var(--dark);
         }
 
         .btn-secondary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.4);
         }
 
         .btn-accent {
-            background: linear-gradient(135deg, var(--accent), #ffd93d);
+            background: linear-gradient(135deg, var(--accent), #fff89a);
             color: var(--dark);
         }
 
         .btn-accent:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 230, 109, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 230, 109, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--text-muted);
+            color: var(--text-muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .shopping-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--dark-alt);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .shopping-item:hover {
+            border-color: var(--secondary);
+            transform: translateX(5px);
+        }
+
+        .shopping-item.checked {
+            opacity: 0.5;
+        }
+
+        .shopping-item.checked .item-text {
+            text-decoration: line-through;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: var(--dark);
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            background: rgba(255, 107, 107, 0.1);
+            transform: scale(1.1);
         }
 
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin: 25px 0;
+            justify-content: center;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .members-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .members-section h3 {
+            font-family: 'Righteous', cursive;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .member-card {
+            background: var(--dark-alt);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .member-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .member-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .member-role.creator {
+            color: var(--accent);
+        }
+
+        .family-info {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+
+        .family-code {
+            font-family: 'Righteous', cursive;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
+            letter-spacing: 3px;
+        }
+
+        .setup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .setup-content {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(78, 205, 196, 0.2);
+        }
+
+        .setup-content h2 {
+            font-family: 'Righteous', cursive;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .setup-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .setup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .setup-form input {
+            padding: 15px 20px;
+            background: var(--dark-alt);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            color: var(--text);
+            font-family: 'Karla', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .setup-form input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.1);
         }
 
         .modal {
@@ -474,25 +625,26 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 20px;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
-            animation: slideUp 0.3s ease;
-            border: 2px solid var(--dark-alt);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(78, 205, 196, 0.2);
+            animation: slideUp 0.3s ease-out;
         }
 
         @keyframes slideUp {
@@ -504,96 +656,106 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--dark-alt);
         }
 
         .modal-header h3 {
             font-family: 'Righteous', cursive;
             font-size: 1.8rem;
-            color: var(--accent);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .close-btn {
-            background: none;
+            background: transparent;
             border: none;
-            color: var(--text);
+            color: var(--text-muted);
             font-size: 2rem;
             cursor: pointer;
-            opacity: 0.6;
-            transition: all 0.3s ease;
+            padding: 0;
             width: 40px;
             height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
         }
 
         .close-btn:hover {
-            opacity: 1;
-            background: var(--dark);
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--primary);
             transform: rotate(90deg);
         }
 
-        .family-setup {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        .family-option {
+        .template-card {
             background: var(--dark-alt);
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
-            text-align: center;
         }
 
-        .family-option:hover {
-            border-color: var(--secondary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+        .template-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 230, 109, 0.2);
         }
 
-        .family-option h4 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--text);
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
 
-        .family-option p {
+        .template-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .template-date {
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-size: 0.95rem;
         }
 
-        .input-group {
-            margin-top: 20px;
+        .template-actions {
+            display: flex;
+            gap: 5px;
         }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.9rem;
+        .icon-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            opacity: 0.6;
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
+        .icon-btn:hover {
+            opacity: 1;
+            background: rgba(255, 107, 107, 0.2);
+            transform: scale(1.1);
+        }
+
+        .save-template-box {
             background: var(--dark-alt);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            color: var(--text);
-            font-family: 'Karla', sans-serif;
-            font-size: 1rem;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--secondary);
+            padding: 25px;
+            border-radius: 15px;
         }
 
         .qr-container {
@@ -602,10 +764,11 @@
         }
 
         .qr-container img {
-            max-width: 100%;
-            height: auto;
+            max-width: 300px;
+            width: 100%;
             border-radius: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .qr-container p {
@@ -621,280 +784,150 @@
         }
 
         .share-btn {
-            white-space: nowrap;
+            padding: 12px;
+            font-size: 0.9rem;
         }
 
-        .family-info {
-            background: var(--dark-alt);
+        .notification-toggle {
+            background: var(--card-bg);
             padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .family-code {
-            font-family: 'Righteous', cursive;
-            font-size: 2rem;
-            color: var(--accent);
-            text-align: center;
-            margin: 10px 0;
-            letter-spacing: 3px;
-        }
-
-        .members-list {
-            margin-top: 15px;
-        }
-
-        .member-item {
+            margin: 20px 0;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 12px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
-
-        .member-name {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .member-role {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            padding: 4px 10px;
-            background: var(--dark);
-            border-radius: 8px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .empty-state h3 {
-            font-family: 'Righteous', cursive;
-            color: var(--text);
-            margin-bottom: 10px;
-        }
-
-        .settings-section {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .settings-section h3 {
-            font-family: 'Righteous', cursive;
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-        }
-
-        .setting-item {
-            display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--dark-alt);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .setting-item:last-child {
-            border-bottom: none;
+        .notification-toggle:hover {
+            border-color: var(--secondary);
         }
 
-        .setting-info h4 {
-            color: var(--text);
+        .notification-info {
+            flex: 1;
+        }
+
+        .notification-info h4 {
             margin-bottom: 5px;
             font-size: 1.1rem;
         }
 
-        .setting-info p {
+        .notification-info p {
+            font-size: 0.9rem;
             color: var(--text-muted);
+        }
+
+        .notification-status {
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--dark-alt);
+            border-radius: 10px;
+            text-align: center;
             font-size: 0.9rem;
         }
 
         .toggle-switch {
             position: relative;
             width: 60px;
-            height: 32px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            height: 30px;
             background: var(--dark-alt);
-            border-radius: 34px;
+            border-radius: 15px;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .toggle-slider:before {
+        .toggle-switch.active {
+            background: var(--success);
+        }
+
+        .toggle-switch::after {
+            content: '';
             position: absolute;
-            content: "";
-            height: 24px;
             width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background: var(--text-muted);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-        }
-
-        .toggle-switch input:checked + .toggle-slider:before {
-            transform: translateX(28px);
+            height: 24px;
             background: white;
-        }
-
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .template-card {
-            background: var(--dark-alt);
-            padding: 20px;
-            border-radius: 15px;
-            cursor: pointer;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
         }
 
-        .template-card:hover {
-            border-color: var(--secondary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.2);
+        .toggle-switch.active::after {
+            left: 33px;
         }
 
-        .template-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-        }
-
-        .template-name {
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 5px;
-        }
-
-        .template-date {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .template-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            color: var(--text);
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .icon-btn:hover {
-            background: var(--dark);
-            transform: scale(1.1);
-        }
-
-        .save-template-box {
-            background: var(--dark-alt);
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .notification-status {
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .notification-status.success {
-            background: rgba(6, 255, 165, 0.1);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-
-        .notification-status.error {
-            background: rgba(255, 107, 107, 0.1);
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .notification-status.info {
-            background: rgba(78, 205, 196, 0.1);
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .week-grid {
+            .menu-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .action-buttons {
                 flex-direction: column;
             }
-            
+
             .action-buttons .btn {
                 width: 100%;
-                justify-content: center;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-buttons {
+                flex-direction: column;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
             }
 
             .share-options {
                 grid-template-columns: 1fr;
             }
+        }
 
-            .add-item-form {
-                flex-direction: column;
-            }
+        /* Scrollbar personalizzata */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-alt);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Animazione caricamento */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 2s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
     <div class="bg-pattern"></div>
+    
     <div id="root"></div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
-    
-    <!-- React & Babel -->
+
+    <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -971,6 +1004,10 @@
             const [savedMenus, setSavedMenus] = useState([]);
             const [savedShoppingLists, setSavedShoppingLists] = useState([]);
 
+            // IMPORTANTE: Ref per prevenire loop di aggiornamenti
+            const isUpdatingFromFirebase = useRef(false);
+            const updateTimeouts = useRef({});
+
             const daysOfWeek = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 
             // Controlla setup famiglia all'avvio
@@ -1009,30 +1046,40 @@
                 }
             };
 
-            // Sincronizza dati con Firebase
+            // Sincronizza dati con Firebase - VERSIONE OTTIMIZZATA
             useEffect(() => {
                 if (familyCode && userId) {
                     // Listener per menu
                     const menuRef = database.ref(`/families/${familyCode}/menu`);
-                    menuRef.on('value', (snapshot) => {
+                    const menuListener = menuRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
+                            // Imposta flag per evitare loop
+                            isUpdatingFromFirebase.current = true;
                             setWeekMenu(data);
+                            // Resetta flag dopo un breve delay
+                            setTimeout(() => {
+                                isUpdatingFromFirebase.current = false;
+                            }, 100);
                         }
                     });
 
                     // Listener per shopping list
                     const shoppingRef = database.ref(`/families/${familyCode}/shoppingList`);
-                    shoppingRef.on('value', (snapshot) => {
+                    const shoppingListener = shoppingRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
+                            isUpdatingFromFirebase.current = true;
                             setShoppingList(data);
+                            setTimeout(() => {
+                                isUpdatingFromFirebase.current = false;
+                            }, 100);
                         }
                     });
 
                     // Listener per membri
                     const membersRef = database.ref(`/families/${familyCode}/members`);
-                    membersRef.on('value', (snapshot) => {
+                    const membersListener = membersRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
                             setMembers(data);
@@ -1041,19 +1088,23 @@
 
                     // Listener per template menu
                     const menusRef = database.ref(`/families/${familyCode}/savedMenus`);
-                    menusRef.on('value', (snapshot) => {
+                    const menusListener = menusRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
                             setSavedMenus(Object.entries(data).map(([id, menu]) => ({ id, ...menu })));
+                        } else {
+                            setSavedMenus([]);
                         }
                     });
 
                     // Listener per template liste
                     const listsRef = database.ref(`/families/${familyCode}/savedLists`);
-                    listsRef.on('value', (snapshot) => {
+                    const listsListener = listsRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (data) {
                             setSavedShoppingLists(Object.entries(data).map(([id, list]) => ({ id, ...list })));
+                        } else {
+                            setSavedShoppingLists([]);
                         }
                     });
 
@@ -1064,13 +1115,16 @@
                     updateActivity();
                     const activityInterval = setInterval(updateActivity, 5 * 60 * 1000);
 
+                    // Cleanup: rimuovi tutti i listener quando il componente si smonta
                     return () => {
-                        menuRef.off();
-                        shoppingRef.off();
-                        membersRef.off();
-                        menusRef.off();
-                        listsRef.off();
+                        menuRef.off('value', menuListener);
+                        shoppingRef.off('value', shoppingListener);
+                        membersRef.off('value', membersListener);
+                        menusRef.off('value', menusListener);
+                        listsRef.off('value', listsListener);
                         clearInterval(activityInterval);
+                        // Pulisci tutti i timeout pendenti
+                        Object.values(updateTimeouts.current).forEach(clearTimeout);
                     };
                 }
             }, [familyCode, userId]);
@@ -1098,7 +1152,7 @@
                         
                         // Ottieni token FCM
                         const token = await messaging.getToken({
-                            vapidKey: 'BGT7zunf0sbrqsSakzFudcTU5zE-W_m-IJWjAauTYtiycMvlVW0cfCqhahNF5Pn-2a7De0YroLhMMu_TQdE6xIQ', // Dovrai generare questa chiave nella console Firebase
+                            vapidKey: 'BGT7zunf0sbrqsSakzFudcTU5zE-W_m-IJWjAauTYtiycMvlVW0cfCqhahNF5Pn-2a7De0YroLhMMu_TQdE6xIQ',
                             serviceWorkerRegistration: registration
                         });
                         
@@ -1115,17 +1169,17 @@
                         setNotificationsEnabled(true);
                         setNotificationStatus('✅ Notifiche attivate con successo!');
                         
-                        // Gestisci messaggi in foreground
+                        // Gestisci messaggi in foreground (SENZA DUPLICATI)
                         messaging.onMessage((payload) => {
                             console.log('Messaggio ricevuto in foreground:', payload);
                             
-                            // Mostra notifica anche in foreground
-                            if (Notification.permission === 'granted') {
-                                new Notification(payload.notification.title, {
-                                    body: payload.notification.body,
+                            // Mostra notifica solo se ha senso
+                            if (Notification.permission === 'granted' && payload.notification) {
+                                new Notification(payload.notification.title || 'Menu Famiglia', {
+                                    body: payload.notification.body || 'Nuovo aggiornamento',
                                     icon: '/MealPlanner/icon-192.png',
                                     badge: '/MealPlanner/icon-192.png',
-                                    tag: 'menu-famiglia'
+                                    tag: 'menu-famiglia-foreground' // Tag unico per evitare duplicati
                                 });
                             }
                         });
@@ -1295,14 +1349,26 @@
                 }
             };
 
-            // Funzioni menu
+            // Funzioni menu - VERSIONE OTTIMIZZATA CON DEBOUNCE
             const updateMeal = (day, mealType, value) => {
+                // Aggiorna lo stato locale immediatamente per una UX fluida
                 const updatedMenu = { ...weekMenu };
                 updatedMenu[day][mealType] = value;
                 setWeekMenu(updatedMenu);
                 
-                if (familyCode) {
-                    database.ref(`/families/${familyCode}/menu/${day}/${mealType}`).set(value);
+                // Solo aggiorna Firebase se NON stiamo ricevendo un aggiornamento da Firebase
+                if (familyCode && !isUpdatingFromFirebase.current) {
+                    // Cancella il timeout precedente per questo campo specifico
+                    const timeoutKey = `${day}_${mealType}`;
+                    if (updateTimeouts.current[timeoutKey]) {
+                        clearTimeout(updateTimeouts.current[timeoutKey]);
+                    }
+                    
+                    // Debounce: aggiorna Firebase solo dopo 500ms di inattività
+                    updateTimeouts.current[timeoutKey] = setTimeout(() => {
+                        database.ref(`/families/${familyCode}/menu/${day}/${mealType}`).set(value);
+                        delete updateTimeouts.current[timeoutKey];
+                    }, 500);
                 }
             };
 
@@ -1329,7 +1395,7 @@
                     
                     // Split per virgole e "e" / "&"
                     let ingredients = dishName
-                        .split(/,|\se\s|\s&\s/) // Separa per virgola, " e ", " & "
+                        .split(/,|\se\s|\s&\s/)
                         .map(ing => ing.trim())
                         .filter(ing => ing.length > 0);
                     
@@ -1340,7 +1406,6 @@
                     if (day.lunch) {
                         const lunchIngredients = extractIngredients(day.lunch);
                         lunchIngredients.forEach(ingredient => {
-                            // Evita duplicati (case-insensitive)
                             const exists = items.find(item => 
                                 item.name.toLowerCase() === ingredient.toLowerCase()
                             );
@@ -1373,7 +1438,7 @@
                 
                 setShoppingList(items);
                 
-                if (familyCode) {
+                if (familyCode && !isUpdatingFromFirebase.current) {
                     database.ref(`/families/${familyCode}/shoppingList`).set(items);
                 }
                 
@@ -1395,13 +1460,11 @@
                 }
                 
                 if (checked.length > 0) {
-                    text += '\n✅ GIÀ PRESO:\n';
+                    text += '\n✅ COMPRATI:\n';
                     checked.forEach(item => {
                         text += `☑ ${item.name}\n`;
                     });
                 }
-                
-                text += `\n📅 ${new Date().toLocaleDateString('it-IT')}\n`;
                 
                 return text;
             };
@@ -1467,7 +1530,7 @@
                 URL.revokeObjectURL(url);
             };
 
-            // Funzioni shopping list
+            // Funzioni shopping list - VERSIONE OTTIMIZZATA
             const addItem = () => {
                 if (newItem.trim()) {
                     const item = {
@@ -1479,7 +1542,7 @@
                     setShoppingList(updatedList);
                     setNewItem('');
                     
-                    if (familyCode) {
+                    if (familyCode && !isUpdatingFromFirebase.current) {
                         database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
                     }
                 }
@@ -1491,7 +1554,7 @@
                 );
                 setShoppingList(updatedList);
                 
-                if (familyCode) {
+                if (familyCode && !isUpdatingFromFirebase.current) {
                     database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
                 }
             };
@@ -1500,7 +1563,7 @@
                 const updatedList = shoppingList.filter(item => item.id !== id);
                 setShoppingList(updatedList);
                 
-                if (familyCode) {
+                if (familyCode && !isUpdatingFromFirebase.current) {
                     database.ref(`/families/${familyCode}/shoppingList`).set(updatedList);
                 }
             };
@@ -1602,375 +1665,302 @@
                         window.open(`https://wa.me/?text=${encodeURIComponent(shareText + '\n' + shareUrl)}`, '_blank');
                         break;
                     case 'copy':
-                        navigator.clipboard.writeText(shareUrl);
-                        alert('Link copiato negli appunti!');
+                        navigator.clipboard.writeText(shareUrl).then(() => {
+                            alert('✅ Link copiato negli appunti!');
+                        });
                         break;
                     case 'download':
                         const link = document.createElement('a');
                         link.href = qrCodeUrl;
-                        link.download = `QR-Code-Famiglia-${familyCode}.png`;
+                        link.download = `qr-code-${familyCode}.png`;
                         link.click();
                         break;
                 }
             };
 
-            // Gestione query params per auto-join
-            useEffect(() => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const codeParam = urlParams.get('code');
-                
-                if (codeParam && !familyCode) {
-                    setInputCode(codeParam);
-                    setSetupMode('join');
-                    setShowFamilySetup(true);
-                }
-            }, []);
-
-            if (showFamilySetup) {
-                return (
-                    <div className="container">
-                        <div className="header">
-                            <h1>🍽️ Menu Famiglia</h1>
-                            <p>Organizza il menu settimanale con la tua famiglia</p>
-                        </div>
-
-                        <div className="modal" style={{ position: 'fixed' }}>
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h3>👨‍👩‍👧‍👦 Benvenuto!</h3>
-                                </div>
-
-                                {!setupMode ? (
-                                    <div className="family-setup">
-                                        <div className="family-option" onClick={() => setSetupMode('create')}>
-                                            <h4>✨ Crea nuova famiglia</h4>
-                                            <p>Inizia un nuovo menu condiviso</p>
-                                        </div>
-                                        <div className="family-option" onClick={() => setSetupMode('join')}>
-                                            <h4>🤝 Unisciti a famiglia</h4>
-                                            <p>Entra in una famiglia esistente</p>
-                                        </div>
-                                    </div>
-                                ) : setupMode === 'create' ? (
-                                    <div>
-                                        <div className="input-group">
-                                            <label>Il tuo nome</label>
-                                            <input
-                                                type="text"
-                                                placeholder="Es: Mario"
-                                                value={inputName}
-                                                onChange={(e) => setInputName(e.target.value)}
-                                                onKeyPress={(e) => e.key === 'Enter' && createFamily()}
-                                                autoFocus
-                                            />
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                            <button className="btn btn-secondary" onClick={() => setSetupMode('')}>
-                                                ← Indietro
-                                            </button>
-                                            <button className="btn btn-primary" style={{ flex: 1 }} onClick={createFamily}>
-                                                Crea Famiglia
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <div className="input-group">
-                                            <label>Codice famiglia</label>
-                                            <input
-                                                type="text"
-                                                placeholder="ES: ABC123"
-                                                value={inputCode}
-                                                onChange={(e) => setInputCode(e.target.value.toUpperCase())}
-                                                autoFocus
-                                            />
-                                        </div>
-                                        <div className="input-group">
-                                            <label>Il tuo nome</label>
-                                            <input
-                                                type="text"
-                                                placeholder="Es: Mario"
-                                                value={inputName}
-                                                onChange={(e) => setInputName(e.target.value)}
-                                                onKeyPress={(e) => e.key === 'Enter' && joinFamily()}
-                                            />
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                            <button className="btn btn-secondary" onClick={() => setSetupMode('')}>
-                                                ← Indietro
-                                            </button>
-                                            <button className="btn btn-primary" style={{ flex: 1 }} onClick={joinFamily}>
-                                                Unisciti
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
             return (
                 <div className="container">
                     <div className="header">
                         <h1>🍽️ Menu Famiglia</h1>
-                        <p>Ciao {userName}! Benvenuto nella famiglia <strong>{familyCode}</strong></p>
+                        <p>Organizza il menu settimanale e genera la lista della spesa automaticamente</p>
                         <div className="powered-by">
-                            Powered by Fester85
+                            Powered by <a href="https://thesimplecorner.org" target="_blank" rel="noopener noreferrer">TheSimpleCorner</a>
                         </div>
                     </div>
 
-                    <div className="nav-tabs">
-                        <button
-                            className={`nav-tab ${activeTab === 'menu' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('menu')}
-                        >
-                            <span>📅 Menu</span>
-                        </button>
-                        <button
-                            className={`nav-tab ${activeTab === 'shopping' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('shopping')}
-                        >
-                            <span>🛒 Spesa</span>
-                        </button>
-                        <button
-                            className={`nav-tab ${activeTab === 'family' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('family')}
-                        >
-                            <span>👨‍👩‍👧‍👦 Famiglia</span>
-                        </button>
-                        <button
-                            className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('settings')}
-                        >
-                            <span>⚙️ Impostazioni</span>
-                        </button>
-                    </div>
+                    {/* Setup Famiglia Modal */}
+                    {showFamilySetup && (
+                        <div className="setup-modal">
+                            <div className="setup-content">
+                                <h2>👨‍👩‍👧‍👦 Benvenuto!</h2>
+                                
+                                {!setupMode && (
+                                    <div className="setup-buttons">
+                                        <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => setSetupMode('create')}>
+                                            <span>Crea Famiglia</span>
+                                        </button>
+                                        <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setSetupMode('join')}>
+                                            <span>Unisciti</span>
+                                        </button>
+                                    </div>
+                                )}
 
-                    {/* TAB MENU */}
-                    <div className={`tab-content ${activeTab === 'menu' ? 'active' : ''}`}>
-                        <div className="week-grid">
-                            {daysOfWeek.map(day => (
-                                <div key={day} className="day-card">
-                                    <div className="day-name">{day}</div>
-                                    <div className="meal-section">
-                                        <div className="meal-label">🌅 Pranzo</div>
+                                {setupMode === 'create' && (
+                                    <div className="setup-form">
                                         <input
                                             type="text"
-                                            className="meal-input"
-                                            placeholder="Cosa mangiamo?"
-                                            value={weekMenu[day].lunch}
-                                            onChange={(e) => updateMeal(day, 'lunch', e.target.value)}
+                                            placeholder="Il tuo nome"
+                                            value={inputName}
+                                            onChange={(e) => setInputName(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && createFamily()}
                                         />
+                                        <button className="btn btn-primary" onClick={createFamily}>
+                                            <span>Crea Famiglia</span>
+                                        </button>
+                                        <button className="btn btn-outline" onClick={() => setSetupMode('')}>
+                                            <span>Indietro</span>
+                                        </button>
                                     </div>
-                                    <div className="meal-section">
-                                        <div className="meal-label">🌙 Cena</div>
+                                )}
+
+                                {setupMode === 'join' && (
+                                    <div className="setup-form">
                                         <input
                                             type="text"
-                                            className="meal-input"
-                                            placeholder="Cosa mangiamo?"
-                                            value={weekMenu[day].dinner}
-                                            onChange={(e) => updateMeal(day, 'dinner', e.target.value)}
+                                            placeholder="Codice Famiglia"
+                                            value={inputCode}
+                                            onChange={(e) => setInputCode(e.target.value)}
                                         />
+                                        <input
+                                            type="text"
+                                            placeholder="Il tuo nome"
+                                            value={inputName}
+                                            onChange={(e) => setInputName(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && joinFamily()}
+                                        />
+                                        <button className="btn btn-secondary" onClick={joinFamily}>
+                                            <span>Unisciti</span>
+                                        </button>
+                                        <button className="btn btn-outline" onClick={() => setSetupMode('')}>
+                                            <span>Indietro</span>
+                                        </button>
                                     </div>
-                                </div>
-                            ))}
+                                )}
+                            </div>
                         </div>
+                    )}
 
-                        <div className="action-buttons">
-                            <button className="btn btn-primary" onClick={generateShoppingList}>
-                                🛒 Genera Lista Spesa
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => setShowSaveMenuModal(true)}>
-                                💾 Salva Menu
-                            </button>
-                            <button className="btn btn-accent" onClick={() => setShowLoadMenuModal(true)}>
-                                📂 Carica Menu
-                            </button>
-                            <button className="btn btn-primary" onClick={clearMenu}>
-                                🗑️ Cancella Tutto
-                            </button>
-                        </div>
-                        <div className="action-buttons" style={{ marginTop: '15px' }}>
-                            <button className="btn btn-secondary" onClick={() => shareOnWhatsApp('menu')}>
-                                💬 Condividi
-                            </button>
-                            <button className="btn btn-accent" onClick={() => copyToClipboard('menu')}>
-                                📋 Copia
-                            </button>
-                            <button className="btn btn-primary" onClick={() => downloadAsFile('menu')}>
-                                📥 Scarica
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* TAB SHOPPING LIST */}
-                    <div className={`tab-content ${activeTab === 'shopping' ? 'active' : ''}`}>
-                        <div className="shopping-list">
-                            <div className="add-item-form">
-                                <input
-                                    type="text"
-                                    className="add-item-input"
-                                    placeholder="Aggiungi prodotto..."
-                                    value={newItem}
-                                    onChange={(e) => setNewItem(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && addItem()}
-                                />
-                                <button className="btn btn-primary" onClick={addItem}>
-                                    ➕ Aggiungi
+                    {/* Main Content */}
+                    {!showFamilySetup && (
+                        <>
+                            <div className="nav-tabs">
+                                <button 
+                                    className={`nav-tab ${activeTab === 'menu' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('menu')}
+                                >
+                                    <span>📅 Menu</span>
+                                </button>
+                                <button 
+                                    className={`nav-tab ${activeTab === 'shopping' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('shopping')}
+                                >
+                                    <span>🛒 Spesa</span>
+                                </button>
+                                <button 
+                                    className={`nav-tab ${activeTab === 'family' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('family')}
+                                >
+                                    <span>👥 Famiglia</span>
                                 </button>
                             </div>
 
-                            {shoppingList.length === 0 ? (
-                                <div className="empty-state">
-                                    <div className="empty-state-icon">🛒</div>
-                                    <h3>Lista vuota</h3>
-                                    <p>Aggiungi prodotti o genera la lista dal menu</p>
+                            {/* Tab Menu */}
+                            <div className={`tab-content ${activeTab === 'menu' ? 'active' : ''}`}>
+                                <div className="action-buttons">
+                                    <button className="btn btn-primary" onClick={generateShoppingList}>
+                                        <span>📝 Genera Lista Spesa</span>
+                                    </button>
+                                    <button className="btn btn-secondary" onClick={() => setShowSaveMenuModal(true)}>
+                                        <span>💾 Salva Menu</span>
+                                    </button>
+                                    <button className="btn btn-accent" onClick={() => setShowLoadMenuModal(true)}>
+                                        <span>📂 Carica Menu</span>
+                                    </button>
+                                    <button className="btn btn-outline" onClick={clearMenu}>
+                                        <span>🗑️ Pulisci</span>
+                                    </button>
                                 </div>
-                            ) : (
-                                <div className="shopping-items">
-                                    {shoppingList.map(item => (
-                                        <div
-                                            key={item.id}
-                                            className={`shopping-item ${item.checked ? 'checked' : ''}`}
-                                            onClick={() => toggleItem(item.id)}
-                                        >
-                                            <div className="checkbox"></div>
-                                            <span className="item-text">{item.name}</span>
-                                            <button
-                                                className="delete-btn"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    deleteItem(item.id);
-                                                }}
-                                            >
-                                                ✕
-                                            </button>
+
+                                <div className="action-buttons">
+                                    <button className="btn btn-secondary" onClick={() => shareOnWhatsApp('menu')}>
+                                        <span>💬 WhatsApp</span>
+                                    </button>
+                                    <button className="btn btn-accent" onClick={() => copyToClipboard('menu')}>
+                                        <span>📋 Copia</span>
+                                    </button>
+                                    <button className="btn btn-primary" onClick={() => downloadAsFile('menu')}>
+                                        <span>📥 Scarica</span>
+                                    </button>
+                                </div>
+
+                                <div className="menu-grid">
+                                    {daysOfWeek.map(day => (
+                                        <div key={day} className="day-card">
+                                            <h3>{day}</h3>
+                                            <div className="meal-section">
+                                                <div className="meal-label">
+                                                    🌞 Pranzo
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    className="meal-input"
+                                                    placeholder="Es: Pasta al pomodoro"
+                                                    value={weekMenu[day]?.lunch || ''}
+                                                    onChange={(e) => updateMeal(day, 'lunch', e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="meal-section">
+                                                <div className="meal-label">
+                                                    🌙 Cena
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    className="meal-input"
+                                                    placeholder="Es: Pizza margherita"
+                                                    value={weekMenu[day]?.dinner || ''}
+                                                    onChange={(e) => updateMeal(day, 'dinner', e.target.value)}
+                                                />
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
-                            )}
-                        </div>
+                            </div>
 
-                        <div className="action-buttons">
-                            <button className="btn btn-secondary" onClick={() => setShowSaveListModal(true)}>
-                                💾 Salva Lista
-                            </button>
-                            <button className="btn btn-accent" onClick={() => setShowLoadListModal(true)}>
-                                📂 Carica Lista
-                            </button>
-                            <button className="btn btn-primary" onClick={clearShoppingList}>
-                                🗑️ Cancella Tutto
-                            </button>
-                        </div>
-                        <div className="action-buttons" style={{ marginTop: '15px' }}>
-                            <button className="btn btn-secondary" onClick={() => shareOnWhatsApp('shopping')}>
-                                💬 Condividi
-                            </button>
-                            <button className="btn btn-accent" onClick={() => copyToClipboard('shopping')}>
-                                📋 Copia
-                            </button>
-                            <button className="btn btn-primary" onClick={() => downloadAsFile('shopping')}>
-                                📥 Scarica
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* TAB FAMIGLIA */}
-                    <div className={`tab-content ${activeTab === 'family' ? 'active' : ''}`}>
-                        <div className="family-info">
-                            <h3 style={{ textAlign: 'center', marginBottom: '10px', color: 'var(--text-muted)' }}>
-                                Codice Famiglia
-                            </h3>
-                            <div className="family-code">{familyCode}</div>
-                            
-                            <div className="members-list">
-                                <h4 style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>
-                                    Membri ({Object.keys(members).length})
-                                </h4>
-                                {Object.entries(members).map(([id, member]) => (
-                                    <div key={id} className="member-item">
-                                        <span className="member-name">
-                                            {member.name} {id === userId && '(Tu)'}
-                                        </span>
-                                        <span className="member-role">
-                                            {member.role === 'creator' ? '👑 Creatore' : '👤 Membro'}
-                                        </span>
+                            {/* Tab Shopping */}
+                            <div className={`tab-content ${activeTab === 'shopping' ? 'active' : ''}`}>
+                                <div className="shopping-list">
+                                    <div className="action-buttons">
+                                        <button className="btn btn-secondary" onClick={() => setShowSaveListModal(true)}>
+                                            <span>💾 Salva Lista</span>
+                                        </button>
+                                        <button className="btn btn-accent" onClick={() => setShowLoadListModal(true)}>
+                                            <span>📂 Carica Lista</span>
+                                        </button>
+                                        <button className="btn btn-outline" onClick={clearShoppingList}>
+                                            <span>🗑️ Pulisci</span>
+                                        </button>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
 
-                        <div className="action-buttons">
-                            <button className="btn btn-secondary" onClick={showQRCode}>
-                                📱 Mostra QR Code
-                            </button>
-                            <button className="btn btn-primary" onClick={leaveFamily}>
-                                🚪 Esci dalla Famiglia
-                            </button>
-                        </div>
-                    </div>
+                                    <div className="action-buttons">
+                                        <button className="btn btn-secondary" onClick={() => shareOnWhatsApp('shopping')}>
+                                            <span>💬 WhatsApp</span>
+                                        </button>
+                                        <button className="btn btn-accent" onClick={() => copyToClipboard('shopping')}>
+                                            <span>📋 Copia</span>
+                                        </button>
+                                        <button className="btn btn-primary" onClick={() => downloadAsFile('shopping')}>
+                                            <span>📥 Scarica</span>
+                                        </button>
+                                    </div>
 
-                    {/* TAB IMPOSTAZIONI */}
-                    <div className={`tab-content ${activeTab === 'settings' ? 'active' : ''}`}>
-                        <div className="settings-section">
-                            <h3>⚙️ Impostazioni</h3>
-                            
-                            <div className="setting-item">
-                                <div className="setting-info">
-                                    <h4>🔔 Notifiche Push</h4>
-                                    <p>Ricevi notifiche quando il menu o la spesa vengono modificati</p>
-                                    {fcmToken && (
-                                        <p style={{ fontSize: '0.75rem', marginTop: '5px', opacity: 0.7 }}>
-                                            Token: {fcmToken.substring(0, 20)}...
-                                        </p>
-                                    )}
+                                    <div className="add-item-form">
+                                        <input
+                                            type="text"
+                                            placeholder="Aggiungi prodotto..."
+                                            value={newItem}
+                                            onChange={(e) => setNewItem(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && addItem()}
+                                        />
+                                        <button className="btn btn-primary" onClick={addItem}>
+                                            <span>+</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="shopping-items">
+                                        {shoppingList.length === 0 ? (
+                                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '40px 20px' }}>
+                                                Nessun prodotto nella lista. Aggiungi manualmente o genera dalla sezione Menu!
+                                            </p>
+                                        ) : (
+                                            shoppingList.map(item => (
+                                                <div key={item.id} className={`shopping-item ${item.checked ? 'checked' : ''}`}>
+                                                    <div 
+                                                        className={`checkbox ${item.checked ? 'checked' : ''}`}
+                                                        onClick={() => toggleItem(item.id)}
+                                                    ></div>
+                                                    <span className="item-text">{item.name}</span>
+                                                    <button className="delete-btn" onClick={() => deleteItem(item.id)}>
+                                                        🗑️
+                                                    </button>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
                                 </div>
-                                <label className="toggle-switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={notificationsEnabled}
-                                        onChange={toggleNotifications}
-                                    />
-                                    <span className="toggle-slider"></span>
-                                </label>
                             </div>
-                            
-                            {notificationsEnabled && (
-                                <div className="setting-item" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                                    <button 
-                                        className="btn btn-secondary"
-                                        onClick={sendTestNotification}
-                                        style={{ width: '100%', padding: '12px' }}
-                                    >
-                                        Invia Notifica di Test
+
+                            {/* Tab Family */}
+                            <div className={`tab-content ${activeTab === 'family' ? 'active' : ''}`}>
+                                <div className="family-info">
+                                    <h3>Codice Famiglia</h3>
+                                    <div className="family-code">{familyCode}</div>
+                                    <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>
+                                        Condividi questo codice con i tuoi familiari
+                                    </p>
+                                    <button className="btn btn-primary" onClick={showQRCode}>
+                                        <span>📱 Mostra QR Code</span>
                                     </button>
                                 </div>
-                            )}
-                            
-                            {notificationStatus && (
-                                <div className={`notification-status ${
-                                    notificationStatus.includes('✅') ? 'success' : 
-                                    notificationStatus.includes('❌') ? 'error' : 'info'
-                                }`}>
-                                    {notificationStatus}
-                                </div>
-                            )}
-                        </div>
 
-                        <div className="settings-section">
-                            <h3>ℹ️ Informazioni</h3>
-                            <div style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                                <p><strong>Nome:</strong> {userName}</p>
-                                <p><strong>Codice Famiglia:</strong> {familyCode}</p>
-                                <p><strong>Membro dal:</strong> {members[userId] ? new Date(members[userId].joinedAt).toLocaleDateString('it-IT') : '-'}</p>
-                                <p style={{ marginTop: '20px', fontSize: '0.85rem', opacity: 0.7 }}>
-                                    Versione 2.0 - Powered by Fester85
-                                </p>
+                                {/* Notifiche Toggle */}
+                                <div className="notification-toggle">
+                                    <div className="notification-info">
+                                        <h4>🔔 Notifiche Push</h4>
+                                        <p>Ricevi aggiornamenti in tempo reale</p>
+                                    </div>
+                                    <div 
+                                        className={`toggle-switch ${notificationsEnabled ? 'active' : ''}`}
+                                        onClick={toggleNotifications}
+                                    ></div>
+                                </div>
+
+                                {notificationStatus && (
+                                    <div className="notification-status">
+                                        {notificationStatus}
+                                    </div>
+                                )}
+
+                                {notificationsEnabled && (
+                                    <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                                        <button className="btn btn-outline" onClick={sendTestNotification}>
+                                            <span>📬 Invia Notifica di Test</span>
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Membri */}
+                                <div className="members-section">
+                                    <h3>👥 Membri della Famiglia</h3>
+                                    <div className="members-grid">
+                                        {Object.entries(members).map(([uid, member]) => (
+                                            <div key={uid} className="member-card">
+                                                <div className="member-name">{member.name}</div>
+                                                <div className={`member-role ${member.role}`}>
+                                                    {member.role === 'creator' ? '👑 Creatore' : '👤 Membro'}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div style={{ marginTop: '30px', textAlign: 'center' }}>
+                                    <button className="btn btn-outline" onClick={leaveFamily}>
+                                        <span>🚪 Esci dalla Famiglia</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                    )}
 
                     {/* Save Menu Modal */}
                     {showSaveMenuModal && (
@@ -1987,7 +1977,7 @@
                                     <input
                                         type="text"
                                         className="meal-input"
-                                        placeholder="Es: Menu Maggio, Menu Vegetariano..."
+                                        placeholder="Es: Menu Gennaio, Menu Festivo..."
                                         value={templateName}
                                         onChange={(e) => setTemplateName(e.target.value)}
                                         onKeyPress={(e) => e.key === 'Enter' && saveMenu()}
